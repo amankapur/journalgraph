@@ -1,0 +1,33 @@
+<h1>Listing articles</h1>
+
+<table>
+  <tr>
+    <th>Arxiv</th>
+    <th>Arxiv url</th>
+    <th>Summary</th>
+    <th>Published date</th>
+    <th>Update date</th>
+    <th>Title</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @articles.each do |article| %>
+  <tr>
+    <td><%= article.arxiv_id %></td>
+    <td><%= article.arxiv_url %></td>
+    <td><%= article.summary %></td>
+    <td><%= article.published_date %></td>
+    <td><%= article.update_date %></td>
+    <td><%= article.title %></td>
+    <td><%= link_to 'Show', article %></td>
+    <td><%= link_to 'Edit', edit_article_path(article) %></td>
+    <td><%= link_to 'Destroy', article, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Article', new_article_path %>
