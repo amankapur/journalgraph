@@ -1,6 +1,12 @@
 require 'nokogiri'
 require 'open-uri'
 
+
+task :makedb do 
+	# JIMMY PUT YOUR SCRIPT IN HERE
+end
+
+
 class ArxivEntry
 	def initialize id, updated, published, title, summary
 		@id = id
