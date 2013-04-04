@@ -32,7 +32,12 @@ def parseArxivQuery(url,numresults)
 		title = entry.at_xpath('.//xmlns:title')
 		summary = entry.at_xpath('.//xmlns:summary')
 		authors = entry.xpath('.//xmlns:author') #returns a nodeset
-		#author_affiliations = doc.xpath('//arxiv:affiliation',namespaces) #returns a nodeset
+		#uthor_affiliations = doc.xpath('//arxiv:affiliation',namespaces) #returns a nodeset
+		doi = doc.xpath('//arxiv:doi',namespaces)
+		comment = doc.xpath('//arxiv:comment',namespaces)
+		journal_ref   = doc.xpath('//arxiv:journal_ref',namespaces)
+		primary_category = doc.xpath('//arxiv:primary_category',namespaces)
+		doc.xpath('//arxiv:affiliation',namespaces)
 
 		#puts authors + ' ' + affiliation.first.content
 		print id.content
