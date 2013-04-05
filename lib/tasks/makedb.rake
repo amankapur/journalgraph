@@ -1,21 +1,21 @@
 require 'nokogiri'
 require 'open-uri'
-
+require 'awesome_print'
 
 task :makedb do
-	url = 'http://export.arxiv.org/api/query?search_query=all:electron&start=0&max_results='
-	refs_url = 'http://arxiv.org/refs/1304.1032'
-	#query_result = parseArxivQuery(url,1)
-	refs_result = getReferences(refs_url)
-	puts url
-	#puts query_result
-	puts refs_result
+	#url = 'http://export.arxiv.org/api/query?search_query=abs:electron&cat:hep-lat&start=0&max_results='
+	url = 'http://export.arxiv.org/api/query?search_query=abs:energy&start=0&max_results=20'
+	query_result = parseArxivQuery(url,20)
+	ap query_result
+	#refs_url = 'http://arxiv.org/refs/1304.1032'
+	#refs_result = getReferences('http://arxiv.org/refs/hep-ex/9406005v1')
+	#puts refs_result
 end
 
 
 def parseArxivQuery(url,numresults)
 	data = Hash.new
-	url = url + numresults.to_s
+	#url = url + numresults.to_s
 	query = open(url,'Content-Type' => 'text/xml')
 	doc = Nokogiri::XML(query)
 	namespaces = doc.collect_namespaces()
@@ -38,21 +38,33 @@ def parseArxivQuery(url,numresults)
 		authors_data = Hash.new
 		authors.each do |author|
 			author_name = author.at_xpath('.//xmlns:name').content
-			author_affiliation = author.at_xpath('.//arxiv:affiliation',namespaces).content #returns a node
+			#author_affiliation = author.at_xpath('.//arxiv:affiliation',namespaces).content #returns a node
+			author_affiliation = nil
 			authors_data[author_name] = author_affiliation #this is the mapping ot be stored in authors_data
 		end
 
-		data[id.content] = [updated.content, published.content, title.content, summary.content, authors_data]
+		refs_url = id.content.dup
+		refs_url["/abs/"] = "/refs/"
+		#puts "refurl!" + refs_url
+		citations = getReferences(refs_url)
+		#puts "citation! " + citations.to_s
+
+		data[id.content] = [updated.content, published.content, title.content, summary.content, authors_data, citations]
 	end
 	#puts namespaces
 	return data
 end
 
 def getReferences(url)
+	citations = []
 	query = open(url,'Content-Type' => 'text/html')
 	doc = Nokogiri::HTML(query)
 	#puts doc
 
-	refs = doc.xpath('//dt/span[contains(@class,"list-identifier")]/a[contains(@title,"Abstract")]').content
-	return refs
+	refs = doc.xpath('//dt/span[contains(@class,"list-identifier")]/a[contains(@title,"Abstract")]')
+	#refs.map { |ref| ref.content }
+	refs.each do |ref|
+		citations.push(ref.content)
+	end
+	return citations
 end
