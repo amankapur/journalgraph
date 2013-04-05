@@ -4,7 +4,7 @@ require 'awesome_print'
 
 task :makedb do
 	#url = 'http://export.arxiv.org/api/query?search_query=abs:electron&cat:hep-lat&start=0&max_results='
-	url = 'http://export.arxiv.org/api/query?search_query=abs:energy&start=0&max_results=20'
+	url = 'http://export.arxiv.org/api/query?search_query=abs:energy&start=0&max_results=5'
 	query_result = parseArxivQuery(url,20)
 	ap query_result
 	#refs_url = 'http://arxiv.org/refs/1304.1032'
@@ -19,6 +19,7 @@ def parseArxivQuery(url,numresults)
 	query = open(url,'Content-Type' => 'text/xml')
 	doc = Nokogiri::XML(query)
 	namespaces = doc.collect_namespaces()
+	puts namespaces
 
 	doc.xpath('//xmlns:entry').each do |entry|
 		id = entry.at_xpath('.//xmlns:id')
@@ -27,11 +28,38 @@ def parseArxivQuery(url,numresults)
 		title = entry.at_xpath('.//xmlns:title')
 		summary = entry.at_xpath('.//xmlns:summary')
 
-		doi = doc.xpath('//arxiv:doi',namespaces)
-		comment = doc.xpath('//arxiv:comment',namespaces)
-		journal_ref   = doc.xpath('//arxiv:journal_ref',namespaces)
-		primary_category = doc.xpath('//arxiv:primary_category',namespaces)
-		doc.xpath('//arxiv:affiliation',namespaces)
+		doi = entry.at_xpath('.//arxiv:doi',namespaces)
+		comment = entry.at_xpath('.//arxiv:comment',namespaces)
+		journal_ref   = entry.at_xpath('.//arxiv:journal_ref',namespaces)
+		primary_category = entry.at_xpath('.//arxiv:primary_category',namespaces)
+
+		if id
+			id = id.content
+		end
+		if updated
+			updated = updated.content
+		end
+		if published
+			published = published.content
+		end
+		if title
+			title = title.content
+		end
+		if summary
+			summary = summary.content
+		end
+		if doi
+			doi = doi.content
+		end
+		if comment
+			comment = comment.content
+		end
+		if journal_ref
+			journal_ref = journal_ref.content
+		end
+		if primary_category
+			primary_category = primary_category['term']
+		end
 
 		authors = entry.xpath('.//xmlns:author') #returns a nodeset
 
@@ -43,13 +71,23 @@ def parseArxivQuery(url,numresults)
 			authors_data[author_name] = author_affiliation #this is the mapping ot be stored in authors_data
 		end
 
-		refs_url = id.content.dup
+		refs_url = id.dup
 		refs_url["/abs/"] = "/refs/"
-		#puts "refurl!" + refs_url
 		citations = getReferences(refs_url)
-		#puts "citation! " + citations.to_s
 
-		data[id.content] = [updated.content, published.content, title.content, summary.content, authors_data, citations]
+		#puts "refurl " + refs_url
+		#puts "citation  " + citations.to_s
+
+		data[id] = [updated,
+			published,
+			title,
+			summary,
+			doi,
+			comment,
+			journal_ref,
+			primary_category,
+			authors_data,
+			citations]
 	end
 	#puts namespaces
 	return data
