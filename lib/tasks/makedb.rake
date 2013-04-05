@@ -3,6 +3,7 @@ require 'nokogiri'
 require 'open-uri'
 require 'awesome_print'
 
+
 task :makedb => :environment do
 	
 	#url = 'http://export.arxiv.org/api/query?search_query=abs:electron&cat:hep-lat&start=0&max_results='
@@ -16,21 +17,23 @@ task :makedb => :environment do
 	# ap query_result
 	# # end
 
+	=begin uncomment to test getReferences function
 	#refs_url = 'http://arxiv.org/refs/1304.1032'
 	#refs_result = getReferences('http://arxiv.org/refs/hep-ex/9406005v1')
 	#puts refs_result
 end
 
 
-def parseArxivQuery(url,numresults)
+
+def parseArxivQuery(url)
 	data = Hash.new
-	#url = url + numresults.to_s
 	query = open(url,'Content-Type' => 'text/xml')
 	doc = Nokogiri::XML(query)
 	namespaces = doc.collect_namespaces()
 	# puts namespaces
 
 	doc.xpath('//xmlns:entry').each do |entry|
+
 		url = entry.at_xpath('.//xmlns:id')
 		updated = entry.at_xpath('.//xmlns:updated')
 		published = entry.at_xpath('.//xmlns:published')
@@ -76,13 +79,19 @@ def parseArxivQuery(url,numresults)
 			primary_category = primary_category['term']
 		end
 
+
 		authors = entry.xpath('.//xmlns:author') #returns a nodeset
 
 		authors_data = Hash.new
 		authors.each do |author|
-			author_name = author.at_xpath('.//xmlns:name').content
-			#author_affiliation = author.at_xpath('.//arxiv:affiliation',namespaces).content #returns a node
-			author_affiliation = nil
+			author_name = author.at_xpath('.//xmlns:name')
+			author_affiliation = author.at_xpath('.//arxiv:affiliation',namespaces) #returns a node
+			if author_name
+				author_name = author_name.content
+			end
+			if author_affiliation
+				author_affiliation = author_affiliation.content
+			end
 			authors_data[author_name] = author_affiliation #this is the mapping ot be stored in authors_data
 		end
 
@@ -109,17 +118,19 @@ def parseArxivQuery(url,numresults)
 	return data
 end
 
+
+
+
 def getReferences(url)
 	citations = []
 	query = open(url,'Content-Type' => 'text/html')
 	doc = Nokogiri::HTML(query)
-	#puts doc
 
 	refs = doc.xpath('//dt/span[contains(@class,"list-identifier")]/a[contains(@title,"Abstract")]')
-	#refs.map { |ref| ref.content }
 	refs.each do |ref|
 		a = ref.content.match(/:(...*)/)[1]
 		citations.push(a)
 	end
+
 	return citations
 end
