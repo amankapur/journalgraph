@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130403215335) do
+ActiveRecord::Schema.define(:version => 20130405032522) do
 
   create_table "articles", :force => true do |t|
     t.string   "arxiv_id"
@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(:version => 20130403215335) do
     t.string   "title"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
+    t.string   "journal_ref"
+    t.string   "doi"
   end
 
   create_table "authors", :force => true do |t|

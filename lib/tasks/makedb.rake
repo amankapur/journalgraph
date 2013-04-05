@@ -1,12 +1,21 @@
+require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
 require 'awesome_print'
 
-task :makedb do
+task :makedb => :environment do
+	
 	#url = 'http://export.arxiv.org/api/query?search_query=abs:electron&cat:hep-lat&start=0&max_results='
 	url = 'http://export.arxiv.org/api/query?search_query=abs:energy&start=0&max_results=5'
-	query_result = parseArxivQuery(url,20)
-	ap query_result
+	query_result = parseArxivQuery(url,2)
+	#ap query_result
+
+	#attr_accessible :arxiv_id, :arxiv_url, :published_date, :summary, :title, :update_date, :journal_ref, :doi
+	# puts = ap
+	# # query_result.each do |data|
+	# ap query_result
+	# # end
+
 	#refs_url = 'http://arxiv.org/refs/1304.1032'
 	#refs_result = getReferences('http://arxiv.org/refs/hep-ex/9406005v1')
 	#puts refs_result
@@ -19,10 +28,10 @@ def parseArxivQuery(url,numresults)
 	query = open(url,'Content-Type' => 'text/xml')
 	doc = Nokogiri::XML(query)
 	namespaces = doc.collect_namespaces()
-	puts namespaces
+	# puts namespaces
 
 	doc.xpath('//xmlns:entry').each do |entry|
-		id = entry.at_xpath('.//xmlns:id')
+		url = entry.at_xpath('.//xmlns:id')
 		updated = entry.at_xpath('.//xmlns:updated')
 		published = entry.at_xpath('.//xmlns:published')
 		title = entry.at_xpath('.//xmlns:title')
@@ -32,10 +41,16 @@ def parseArxivQuery(url,numresults)
 		comment = entry.at_xpath('.//arxiv:comment',namespaces)
 		journal_ref   = entry.at_xpath('.//arxiv:journal_ref',namespaces)
 		primary_category = entry.at_xpath('.//arxiv:primary_category',namespaces)
+		
+		id = nil
 
-		if id
-			id = id.content
+		if url 
+			url = url.content
+			# puts url
+			id = url.match(/abs\/(...*)/)[1]
+			# puts id
 		end
+
 		if updated
 			updated = updated.content
 		end
@@ -71,14 +86,15 @@ def parseArxivQuery(url,numresults)
 			authors_data[author_name] = author_affiliation #this is the mapping ot be stored in authors_data
 		end
 
-		refs_url = id.dup
+		refs_url = url.dup
 		refs_url["/abs/"] = "/refs/"
 		citations = getReferences(refs_url)
 
 		#puts "refurl " + refs_url
 		#puts "citation  " + citations.to_s
 
-		data[id] = [updated,
+		data[id] = [url,
+			updated,
 			published,
 			title,
 			summary,
@@ -102,7 +118,8 @@ def getReferences(url)
 	refs = doc.xpath('//dt/span[contains(@class,"list-identifier")]/a[contains(@title,"Abstract")]')
 	#refs.map { |ref| ref.content }
 	refs.each do |ref|
-		citations.push(ref.content)
+		a = ref.content.match(/:(...*)/)[1]
+		citations.push(a)
 	end
 	return citations
 end

@@ -1,5 +1,5 @@
 class Article < ActiveRecord::Base
-  attr_accessible :arxiv_id, :arxiv_url, :published_date, :summary, :title, :update_date
+  attr_accessible :arxiv_id, :arxiv_url, :published_date, :summary, :title, :update_date, :journal_ref, :doi
 
   has_many :creations
   has_many :authors, :through => :creations
