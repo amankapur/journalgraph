@@ -8,7 +8,7 @@ task :makedb => :environment do
 	
 	#url = 'http://export.arxiv.org/api/query?search_query=abs:electron&cat:hep-lat&start=0&max_results='
 	url = 'http://export.arxiv.org/api/query?search_query=abs:energy&start=0&max_results=5'
-	query_result = parseArxivQuery(url,2)
+	query_result = parseArxivQuery(url)
 	#ap query_result
 
 	#attr_accessible :arxiv_id, :arxiv_url, :published_date, :summary, :title, :update_date, :journal_ref, :doi
@@ -17,7 +17,7 @@ task :makedb => :environment do
 	# ap query_result
 	# # end
 
-	=begin uncomment to test getReferences function
+	# uncomment to test getReferences function
 	#refs_url = 'http://arxiv.org/refs/1304.1032'
 	#refs_result = getReferences('http://arxiv.org/refs/hep-ex/9406005v1')
 	#puts refs_result
