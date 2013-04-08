@@ -7,18 +7,15 @@ require 'RubyDataStructures'
 task :makedb => :environment do
 	
 	#url = 'http://export.arxiv.org/api/query?search_query=abs:electron&cat:hep-lat&start=0&max_results='
-	url = 'http://export.arxiv.org/api/query?search_query=abs:quantum&start=0&max_results=2'
+
+	url = 'http://export.arxiv.org/api/query?search_query=abs:energy&start=0&max_results=5'
 	query_result = parseArxivQuery(url)
-	# ap query_result
+	ap query_result
+
 
 	#attr_accessible :arxiv_id, :arxiv_url, :published_date, :summary, :title, :update_date, :journal_ref, :doi, :comment, :category
 	#data[id] = [url, updated, published, title, summary, doi, comment, journal_ref, primary_category, authors_data, citations]
 
-
-	# begin uncomment to test getReferences function
-	#refs_url = 'http://arxiv.org/refs/1304.1032'
-	#refs_result = getReferences('http://arxiv.org/refs/hep-ex/9406005v1')
-	#puts refs_result
 
 	max_count = 2000
 
@@ -219,6 +216,7 @@ def getReferences(url)
 
 	return citations
 
+
 end
 
 
@@ -317,4 +315,5 @@ def parseArxivId(arg_id)
 	#puts namespaces
 	return final
 end
+
 
