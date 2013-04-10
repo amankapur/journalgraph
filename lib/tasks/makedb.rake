@@ -5,7 +5,7 @@ require 'awesome_print'
 require 'RubyDataStructures'
 
 task :makedb => :environment do
-	
+
 	#url = 'http://export.arxiv.org/api/query?search_query=abs:electron&cat:hep-lat&start=0&max_results='
 
 	url = 'http://export.arxiv.org/api/query?search_query=abs:energy&start=0&max_results=5'
@@ -29,7 +29,7 @@ task :makedb => :environment do
 		data = queue.dequeue()
 		ap data
 		if data
-			# puts "data id is   :::    " + data[11].to_s
+			# puts 'data id is   :::    ' + data[11].to_s
 		end
 		if data[10].length > 100
 			next
@@ -45,7 +45,7 @@ task :makedb => :environment do
 
 		authors = data[9]
 		puts authors
-		# puts "AUTHOR LENGHT is :::::  " + authors.length.to_s
+		# puts 'AUTHOR LENGTH is :::::  ' + authors.length.to_s
 		authors.each do |author, value|
 			if Author.where(name: author) == []
 				@author = Author.create(name: author)
@@ -78,7 +78,7 @@ task :makedb => :environment do
 			if Article.count < max_count
 				queue.enqueue(data)
 			else
-				puts  "REACHED MAXIMUM##################### "
+				puts  'REACHED MAXIMUM##################### '
 			end
 
 		end #each citation loop
@@ -124,7 +124,7 @@ def parseArxivQuery(url)
 		comment = entry.at_xpath('.//arxiv:comment',namespaces)
 		journal_ref   = entry.at_xpath('.//arxiv:journal_ref',namespaces)
 		primary_category = entry.at_xpath('.//arxiv:primary_category',namespaces)
-		
+
 		id = nil
 
 		if url 
@@ -241,7 +241,7 @@ def parseArxivId(arg_id)
 	comment = entry.at_xpath('.//arxiv:comment',namespaces)
 	journal_ref   = entry.at_xpath('.//arxiv:journal_ref',namespaces)
 	primary_category = entry.at_xpath('.//arxiv:primary_category',namespaces)
-	
+
 	id = nil
 
 	if url 
@@ -315,5 +315,3 @@ def parseArxivId(arg_id)
 	#puts namespaces
 	return final
 end
-
-
