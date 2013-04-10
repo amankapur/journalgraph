@@ -1,9 +1,9 @@
 Journalgraph::Application.routes.draw do
-  get "author/create"
 
-  get "author/destroy"
 
   resources :articles
+
+  match '/query' => 'articles#search'
 
   root to: 'articles#index'
 

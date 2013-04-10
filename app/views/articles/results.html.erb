@@ -1,0 +1,22 @@
+
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Arxiv</th>
+    <th>Arxiv url</th>
+    <th>Summary</th>
+  </tr>
+
+<% @articles.each do |article| %>
+  <tr>
+    <td><%= article.title %></td>
+
+    <td><%= article.arxiv_id %></td>
+    <td><%= article.arxiv_url %></td>
+    <td><%= article.summary %></td>
+
+  </tr>
+  
+<% end %>
+</table>
