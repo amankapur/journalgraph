@@ -40,7 +40,7 @@ task :makedb => :environment do
 			@article = createArticle(data)
 		else
 			puts 'Article already exists'
-
+			puts tag
 			@article = Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{tag}%"])
 		end
 
@@ -53,7 +53,7 @@ task :makedb => :environment do
 			if Author.where(name: author) == []
 				@author = Author.create(name: author)
 				@article.creations.build(author_id: @author.id).save
-				# puts 'author created'
+				puts 'author created'
 			else
 				@author = Author.where(name: author).first
 				@article.creations.build(author_id: @author.id).save
@@ -73,13 +73,11 @@ task :makedb => :environment do
 				puts 'citation article created'	
 			else
 				@cited_article = Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{citation}%"])
-				puts "DAFUQ!!!"
-				puts citation
-				puts @cited_article
-				puts "YUP!!!"
-				if Friendship.where(article_id: @article.id, friend_id: @cited_article.id) != []
+				if Friendship.where(article_id: @article.id, friend_id: @cited_article.id) == []
 					@article.friendships.build(friend_id: @cited_article.id).save	
-					puts 'citation article in db, made relationship'
+					
+					puts 'edge made with existing article...'
+					puts citation
 					puts @article.id
 					puts @cited_article.id	
 				end
@@ -88,7 +86,7 @@ task :makedb => :environment do
 			if Article.count < max_count
 				queue.enqueue(data)
 			else
-				puts  'REACHED MAXIMUM##################### '
+				puts 'REACHED MAXIMUM##################### '
 			end
 
 		end #each citation loop
@@ -100,7 +98,7 @@ end #end task
 
 
 def createArticle(data)
-	puts 'creating article'
+	# puts 'creating article'
 	return Article.create(
 				arxiv_id: data[11], 
 				arxiv_url: data[0],

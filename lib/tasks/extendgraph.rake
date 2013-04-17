@@ -33,11 +33,13 @@ task :extendgraph => :environment do
 			next
 		end
 
-		if Article.where(arxiv_id: data[11]) == []
+		tag = data[11]
+		if Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{tag}%"])  == nil
 			@article = createArticle(data)
 		else
 			puts 'Article already exists'
-			@article = Article.where(arxiv_id: data[11]).first
+
+			@article = Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{tag}%"])
 		end
 
 		# puts @article.creations
@@ -49,7 +51,7 @@ task :extendgraph => :environment do
 			if Author.where(name: author) == []
 				@author = Author.create(name: author)
 				@article.creations.build(author_id: @author.id).save
-				# puts 'author created'
+				puts 'author created'
 			else
 				@author = Author.where(name: author).first
 				@article.creations.build(author_id: @author.id).save
@@ -63,19 +65,16 @@ task :extendgraph => :environment do
 			# ap citation
 			data = parseArxivId(citation)
 
-			# puts "##!!!!!!!!!!!!!"
-			puts citation
-			# puts 
-
-			if Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{citation}%"]) == []
+			if Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{citation}%"]) == nil
 				@cited_article = createArticle(parseArxivId(citation))
 				@article.friendships.build(friend_id: @cited_article.id).save	
 				puts 'citation article created'	
 			else
 				@cited_article = Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{citation}%"])
-				if Friendship.where(article_id: @article.id, friend_id: @cited_article.id) != []
+				if Friendship.where(article_id: @article.id, friend_id: @cited_article.id) == []
 					@article.friendships.build(friend_id: @cited_article.id).save	
-					puts 'citation article in db, made relationship'
+					
+					puts 'edge made with existing article...'
 					puts @article.id
 					puts @cited_article.id	
 				end
@@ -84,7 +83,7 @@ task :extendgraph => :environment do
 			if Article.count < max_count
 				queue.enqueue(data)
 			else
-				puts  'REACHED MAXIMUM##################### '
+				puts 'REACHED MAXIMUM##################### '
 			end
 
 		end #each citation loop
@@ -92,6 +91,7 @@ task :extendgraph => :environment do
 	end  #end while
 
 end #end task
+
 
 
 
