@@ -1,3 +1,16 @@
 #searchbox {
 	text-align: center;
 }
+
+table { 
+  border-spacing:0;
+  border-collapse:collapse;
+}
+
+table tr.oddrow {
+    background-color: #CDCDCD;
+}
+
+table tr.evenrow {
+   
+}
