@@ -10,7 +10,7 @@ task :export_gml => :environment do
   articles = Article.all
   articles.each do |article|
     puts 'node ['
-    puts 'id "' + article.id.to_s + '"'
+    puts 'id ' + article.id.to_s
     puts 'label "' + article.title.to_s + '"'
     puts ']'
   end
@@ -18,6 +18,7 @@ task :export_gml => :environment do
   friendships = Friendship.all
   friendships.each do |friendship|
     puts 'edge ['
+    puts 'edgeid ' + friendship.id.to_s
     puts 'source ' + friendship.article_id.to_s
     puts 'target ' + friendship.friend_id.to_s
     puts 'label "Edge from node ' + friendship.article_id.to_s + ' to node ' + friendship.friend_id.to_s + '"'
