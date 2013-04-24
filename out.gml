@@ -4,467 +4,447 @@ directed 1
 label "Hi I am dat pretty mofo"
 node [
 id 1
-label "Random Behaviour in Quantum Chaos"
+label "quant-ph/0103055v2"
 ]
 node [
 id 2
-label "The Cosmic Ray Energy Spectrum and Related Measurements with the Pierre
-  Auger Observatory"
+label "0906.2189v2"
 ]
 node [
 id 3
-label "The Pierre Auger Observatory I: The Cosmic Ray Energy Spectrum and
-  Related Measurements"
+label "1107.4809v1"
 ]
 node [
 id 4
-label "The Energy Problem"
+label "0901.3711v2"
 ]
 node [
 id 5
-label "On the Møller Energy-Momentum Complex of the Melvin Magnetic Universe"
+label "gr-qc/0202075v1"
 ]
 node [
 id 6
-label "Energy and momentum of cylindrical gravitational waves. II"
+label "gr-qc/9509034v1"
 ]
 node [
 id 7
-label "Energy and angular momentum of charged rotating black holes"
+label "gr-qc/9501002v3"
 ]
 node [
 id 8
-label "A conformal scalar dyon black hole solution"
+label "hep-th/9407121v1"
 ]
 node [
 id 9
-label "Naked singularities and Seifert's conjecture"
+label "gr-qc/9809077v2"
 ]
 node [
 id 10
-label "Energy associated with charged dilaton black holes"
+label "hep-th/9407187v3"
 ]
 node [
 id 11
-label "Tolman's energy of a stringy charged black hole"
+label "gr-qc/9712100v1"
 ]
 node [
 id 12
-label "Energy distribution of charged dilaton black holes"
+label "hep-th/9804140v1"
 ]
 node [
 id 13
-label "Energy and Momentum Distributions of a (2+1)-dimensional black hole
-  background"
+label "hep-th/0307162v3"
 ]
 node [
 id 14
-label "Energy and Momentum of a Stationary Beam of Light"
+label "gr-qc/0204006v1"
 ]
 node [
 id 15
-label "Energy and Momentum in Expansive Nondecelerative Universe"
+label "gr-qc/0101026v1"
 ]
 node [
 id 16
-label "Energy and Momentum in Spacetime Homogeneous G$\ddot{o}$del-type Metrics"
+label "gr-qc/0310018v1"
 ]
 node [
 id 17
-label "Energy and Momentum of a Class of Rotating Gravitational Waves"
+label "gr-qc/0102036v1"
 ]
 node [
 id 18
-label "Energy-momentum and angular momentum of Goedel universes"
+label "gr-qc/0309064v2"
 ]
 node [
 id 19
-label "Energy Distribution of a Gödel-Type Space-Time"
+label "gr-qc/0401039v2"
 ]
 node [
 id 20
-label "Møller Energy for the Kerr-Newman metric"
+label "gr-qc/0010062v1"
 ]
 node [
 id 21
-label "The Energy-Momentum Problem in General Relativity"
+label "hep-th/0308070v1"
 ]
 node [
 id 22
-label "On the energy of a charged dilaton black hole"
+label "gr-qc/9609038v1"
 ]
 node [
 id 23
-label "Energy Distribution in 2d Stringy Black Hole Backgrounds"
+label "gr-qc/0303009v2"
 ]
 node [
 id 24
-label "Effective mass of a radiating charged particle in Einstein's universe"
+label "hep-th/0311050v2"
 ]
 node [
 id 25
-label "Energy-Momentum Distribution: A Crucial Problem in General Relativity"
+label "gr-qc/0410004v1"
 ]
 node [
 id 26
-label "Energy Distribution of a Stringy Charged Black Hole"
+label "gr-qc/0306101v1"
 ]
 node [
 id 27
-label "Energy and Momentum Distributions of the Magnetic Solution to (2+1)
-  Einstein-Maxwell Gravity"
+label "gr-qc/0412120v2"
 ]
 node [
 id 28
-label "The Energy Distribution of the Bianchi Type I Universe"
+label "gr-qc/0008034v1"
 ]
 node [
 id 29
-label "The Energy of the Gamma Metric in the Møller Prescription"
+label "gr-qc/0110058v1"
 ]
 node [
 id 30
-label "Energy Distribution of a Black Hole Solution in Heterotic String Theory"
+label "gr-qc/0302047v1"
 ]
 node [
 id 31
-label "The Energy for 2+1 Dimensional Black Hole Solutions"
+label "gr-qc/0309130v2"
 ]
 node [
 id 32
-label "Energy associated with a static spherically symmetric nonsingular black
-  hole"
+label "gr-qc/0108067v1"
 ]
 node [
 id 33
-label "On the Difference of Energy between the Einstein and Møller
-  Prescription"
+label "gr-qc/0212099v1"
 ]
 node [
 id 34
-label "Energy Distribution in Melvin's Magnetic Universe"
+label "gr-qc/9912093v1"
 ]
 node [
 id 35
-label "Pseudotensors and quasilocal energy-momentum"
+label "gr-qc/9809040v2"
 ]
 node [
 id 36
-label "Does a dynamical system lose energy by emitting gravitational waves?"
+label "gr-qc/9909095v1"
 ]
 node [
 id 37
-label "Quasilocal Energy and Conserved Charges Derived from the Gravitational
-  Action"
+label "gr-qc/9209012v1"
 ]
 node [
 id 38
-label "A radiating dyon solution"
+label "hep-th/9406148v2"
 ]
 node [
 id 39
-label "Energy-Momentum Conservation in General Relativity"
+label "hep-th/9310025v1"
 ]
 node [
 id 40
-label "Quasi-Local Gravitational Energy"
+label "gr-qc/9303030v1"
 ]
 node [
 id 41
-label "Gravitational Collapse and Cosmic Censorship"
+label "gr-qc/9710068v3"
 ]
 node [
 id 42
-label "Selfgravitating nonlinear scalar fields"
+label "gr-qc/0006059v1"
 ]
 node [
 id 43
-label "Gravitational Collapse"
+label "gr-qc/9702036v1"
 ]
 node [
 id 44
-label "Gravitational Collapse, Black Holes and Naked Singularities"
+label "gr-qc/9805066v1"
 ]
 node [
 id 45
-label "Physical nature of the central singularity in spherical collapse"
+label "gr-qc/9805055v2"
 ]
 node [
 id 46
-label "Gravitational Waves around a Naked Singularity -- Odd-Parity
-  Perturbation of Lemaitre-Tolman-Bondi Space-Time --"
+label "gr-qc/9804015v1"
 ]
 node [
 id 47
-label "Role of the scalar field in gravitational lensing"
+label "astro-ph/9801174v2"
 ]
 node [
 id 48
-label "On the Spectrum of the Radiation from a Naked Singularitry"
+label "gr-qc/9804001v2"
 ]
 node [
 id 49
-label "Janis-Newman-Winicour and Wyman solutions are the same"
+label "gr-qc/9701021v2"
 ]
 node [
 id 50
-label "Nature of singularity in Einstein-massless scalar theory"
+label "gr-qc/9512030v2"
 ]
 node [
 id 51
-label "Quasilocal quantities for GR and other gravity theories"
+label "gr-qc/9809020v2"
 ]
 node [
 id 52
-label "Rotating Dilaton Black Holes"
+label "hep-th/9203083v2"
 ]
 node [
 id 53
-label "Black Holes with a Massive Dilaton"
+label "hep-th/9209070v2"
 ]
 node [
 id 54
-label "Quantum Aspects of Black Holes"
+label "hep-th/9209055v1"
 ]
 node [
 id 55
-label "Black Holes as Elementary Particles"
+label "hep-th/9202014v1"
 ]
 node [
 id 56
-label "Pair Creation of Dilaton Black Holes"
+label "hep-th/9309075v2"
 ]
 node [
 id 57
-label "Energy of a spherically symmetric charged dilaton black hole"
+label "gr-qc/9602005v1"
 ]
 node [
 id 58
-label "The Energy of a Dyonic Dilaton Black Hole"
+label "gr-qc/0008035v1"
 ]
 node [
 id 59
-label "On the energy of the de Sitter-Schwarzschild black hole"
+label "gr-qc/9801005v1"
 ]
 node [
 id 60
-label "Energy Associated with Schwarzschild Black Hole in a Magnetic Universe"
+label "gr-qc/9902022v2"
 ]
 node [
 id 61
-label "The Energy Distribution in a Static Spherically Symmetric Nonsingular
-  Black Hole Space-Time"
+label "gr-qc/0008029v1"
 ]
 node [
 id 62
-label "Energy of a Conformal Scalar Dyon Black Hole"
+label "gr-qc/0010094v1"
 ]
 node [
 id 63
-label "Energy Distribution of a Charged Regular Black Hole"
+label "gr-qc/0011066v1"
 ]
 node [
 id 64
-label "Møller energy of the nonstatic spherically symmetric metrics"
+label "gr-qc/0010068v1"
 ]
 node [
 id 65
-label "The Gravitational Hamiltonian, Action, Entropy, and Surface Terms"
+label "gr-qc/9501014v1"
 ]
 node [
 id 66
-label "Energy of Isolated Systems at Retarded Times as the Null Limit of
-  Quasilocal Energy"
+label "gr-qc/9609057v1"
 ]
 node [
 id 67
-label "Positivity of Quasilocal Mass"
+label "gr-qc/0303019v2"
 ]
 node [
 id 68
-label "Super-energy tensors"
+label "gr-qc/9906087v1"
 ]
 node [
 id 69
-label "Remarks on Superenergy Tensors"
+label "gr-qc/9901019v1"
 ]
 node [
 id 70
-label "Superenergy tensors for a massive scalar field"
+label "gr-qc/9905080v1"
 ]
 node [
 id 71
-label "Conserved superenergy currents"
+label "gr-qc/0302101v2"
 ]
 node [
 id 72
-label "Gravitational Energy-Momentum Density in Teleparallel Gravity"
+label "gr-qc/0003100v1"
 ]
 node [
 id 73
-label "The energy of the universe in teleparallel gravity"
+label "gr-qc/0303034v1"
 ]
 node [
 id 74
-label "Teleparallel Gravity: An Overview"
+label "gr-qc/0011087v1"
 ]
 node [
 id 75
-label "The Black Hole in Three Dimensional Space Time"
+label "hep-th/9204099v3"
 ]
 node [
 id 76
-label "Exact solutions of Einstein and Einstein-scalar equations in 2 + 1
-  dimensions"
+label "gr-qc/9408035v1"
 ]
 node [
 id 77
-label "Interior Structure of a Charged Spinning Black Hole in $(2+1)$-Dimensions"
+label "gr-qc/9406049v1"
 ]
 node [
 id 78
-label "Radiation collapse and gravitational waves in three dimensions"
+label "gr-qc/9404047v1"
 ]
 node [
 id 79
-label "Conformal Anomaly for Dilaton Coupled Theories from AdS/CFT
-  Correspondence"
+label "hep-th/9810008v1"
 ]
 node [
 id 80
-label "Finite gravitational action for higher derivative and stringy gravities"
+label "hep-th/9911152v1"
 ]
 node [
 id 81
-label "Finite Action in d5 Gauged Supergravity and Dilatonic Conformal Anomaly
-  for Dual Quantum Field Theory"
+label "hep-th/0001122v4"
 ]
 node [
 id 82
-label "Asymptotically Anti-de Sitter spacetimes and their stress energy tensor"
+label "hep-th/0010138v1"
 ]
 node [
 id 83
-label "The Holographic Weyl anomaly"
+label "hep-th/9806087v2"
 ]
 node [
 id 84
-label "Localizing Gravity on a String-Like Defect in Six Dimensions"
+label "hep-th/0004014v4"
 ]
 node [
 id 85
-label "The expansive nondecelerative universe - Gravitational effects and their
-  manifestation in black holes evaporation and far-infrared spectra"
+label "gr-qc/9903090v1"
 ]
 node [
 id 86
-label "Inflation on a single brane - exact solutions"
+label "gr-qc/0011060v1"
 ]
 node [
 id 87
-label "The Role of Energy and a New Approach to Gravitational Waves in General
-  Relativity"
+label "gr-qc/9904046v1"
 ]
 node [
 id 88
-label "The Energy of a Dynamical Wave-Emitting System in General Relativity"
+label "gr-qc/0302020v1"
 ]
 node [
 id 89
-label "General Formula for the Momentum Imparted to Test Particles in Arbitrary
-  Spacetimes"
+label "gr-qc/0701098v1"
 ]
 node [
 id 90
-label "Super-energy tensor for space-times with vanishing scalar curvature"
+label "gr-qc/9904031v1"
 ]
 node [
 id 91
-label "General Electric-Magnetic decomposition of fields, positivity and
-  Rainich-like conditions"
+label "gr-qc/0010095v2"
 ]
 node [
 id 92
-label "Properties of Bel currents"
+label "gr-qc/0104091v1"
 ]
 node [
 id 93
-label "Plasma waves driven by gravitational waves in an expanding universe"
+label "gr-qc/0205096v1"
 ]
 node [
 id 94
-label "Riemannian Space-times of Gödel Type in Five Dimensions"
+label "gr-qc/9712071v1"
 ]
 node [
 id 95
-label "Godel Universes in String Theory"
+label "gr-qc/9803048v2"
 ]
 node [
 id 96
-label "Effective Geometry"
+label "gr-qc/0302052v1"
 ]
 node [
 id 97
-label "Boundary States for Supertubes in Flat Spacetime and Godel Universe"
+label "hep-th/0309135v3"
 ]
 node [
 id 98
-label "Godel-Type Metrics in Various Dimensions"
+label "hep-th/0312290v3"
 ]
 node [
 id 99
-label "Can branes travel beyond CTC horizon in Godel Universe?"
+label "hep-th/0306148v2"
 ]
 node [
 id 100
-label "Classical and Quantum Strings in compactified pp-waves and Godel type
-  Universes"
+label "hep-th/0307265v1"
 ]
 node [
 id 101
-label "Godel brane"
+label "gr-qc/0309030v3"
 ]
 node [
 id 102
-label "On angular momentum of gravitational radiation"
+label "gr-qc/0403009v1"
 ]
 node [
 id 103
-label "Closed timelike curves in general relativity"
+label "gr-qc/0211051v1"
 ]
 node [
 id 104
-label "Dynamics and stability of the Godel universe"
+label "gr-qc/0308067v2"
 ]
 node [
 id 105
-label "Møller Energy-Momentum Complex of a Static Axially Symmetric Vacuum
-  Space-Time"
+label "gr-qc/0403039v6"
 ]
 node [
 id 106
-label "Gödel-type Spacetimes in Induced Matter Gravity Theory"
+label "gr-qc/9904074v1"
 ]
 node [
 id 107
-label "Causal Anomalies in Kaluza-Klein Gravity Theories"
+label "gr-qc/9808049v1"
 ]
 node [
 id 108
-label "Cylindrical Black Hole in General Relativity"
+label "gr-qc/9404041v2"
 ]
 node [
 id 109
-label "Gravitational collapse to toroidal, cylindrical and planar black holes"
+label "gr-qc/9709013v2"
 ]
 node [
 id 110
-label "Gravitational waves, black holes and cosmic strings in cylindrical
-  symmetry"
+label "gr-qc/9909070v2"
 ]
 node [
 id 111
-label "Magnetic strings in anti-de Sitter General Relativity"
+label "hep-th/0110202v1"
 ]
 edge [
 source 5

@@ -1,5 +1,4 @@
 
-
 class ArticlesController < ApplicationController
   # GET /articles
   # GET /articles.json
@@ -20,20 +19,42 @@ class ArticlesController < ApplicationController
 
   def search
     # puts params['query']
-    tag = params['query']
-    # search_type = params[]
-
-    @articles = Article.find(:all, conditions: ['summary LIKE ?', "%#{tag}%"])
     
-    # puts 'ARTICLES ###############################'
-    # puts @articles
+    tag = params['query']
+
+    @articles = getRelatedPapers(tag)
+
     @found = 1
     if @articles.nil?
       @msg = "None found, try again..."
       @found = 0
     end
 
-    render "results"
+    render "articles"
+    
+  end
+
+  def getRelatedPapers(curr_id)
+    @article = Article.where('arxiv_id = ?', curr_id).first
+
+    if @article == []
+      return []
+    end
+    @valid_friends = []
+
+    @friends = @article.friendships
+
+    @friends.each do |friendship|
+
+      friend = Article.find(friendship.friend_id)
+
+      if friend.category == @article.category
+        @valid_friends << friend
+      end
+    end
+
+    return @valid_friends
+
   end
 
 end
