@@ -10,6 +10,7 @@ gem 'nokogiri'
 gem 'awesome_print'
 gem 'RubyDataStructures'
 gem 'graph'
+gem 'summarize'
 
 
 # Gems used only for assets and not required

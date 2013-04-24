@@ -10,7 +10,11 @@ task :export_gml => :environment do
   articles = Article.all
   articles.each do |article|
     puts 'node ['
+<<<<<<< HEAD
     puts 'id ' + article.id.to_s
+=======
+    puts 'id ' + article.id.to_s + ''
+>>>>>>> 6df6c63c28c952578af14791e3b71885739e99f2
     puts 'label "' + article.title.to_s + '"'
     puts ']'
   end
