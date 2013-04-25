@@ -1,0 +1,18 @@
+
+
+<table>
+  <tr class="row">
+    <th class="span3">Name</th>
+    <th class="span2">Show Papers</th>
+  </tr>
+
+
+  <% @authors.each do |author| %>
+    <tr class="row <%= cycle('evenrow', 'oddrow') -%>">
+      <td class="span5"><%= article.name %></td>
+      <!-- <td class="span2"><%= link_to "View Paper", article.arxiv_url %></td> -->
+    </tr>
+  <% end %>
+
+
+</table>

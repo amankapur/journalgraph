@@ -5,6 +5,9 @@ Journalgraph::Application.routes.draw do
 
   match '/query' => 'articles#search'
 
+  match '/showall' => 'articles#show_all'
+  match '/getrelated' => 'articles#get_related'
+  
   root to: 'articles#index'
 
   # The priority is based upon order of creation:
