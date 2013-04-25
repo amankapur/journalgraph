@@ -1,0 +1,35 @@
+
+
+<div id="articles">
+
+
+  <% if @articles != [] %>
+
+    <table>
+      <tr class="row">
+        <th class="span5">Title</th>
+        <th class="span2">Arxiv url</th>
+        <th class="span5">Summary</th>
+      </tr>
+     
+      <% @articles.each do |article| %>
+        <tr class="row <%= cycle('evenrow', 'oddrow') -%>">
+          <td class="span5"><%= article.title %></td>
+          <td class="span2"><%= link_to "View Paper", article.arxiv_url %></td>
+          <td class="span5"><%= truncate(article.summary, length: 300) %></td>
+          <% if article.friendships !=[] %>
+          <td class="span4"><button class="btn related" id= "<%=article.arxiv_id%>"> View Related Papers </button> </td>
+          <% end %>
+        </tr>  
+      <% end %>
+    </table>
+
+  <% else %>
+
+  <h1> <%= @msg %></h1>
+
+  <% end %>
+
+
+
+</div>

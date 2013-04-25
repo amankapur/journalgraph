@@ -1,7 +1,0 @@
-require 'rubygems'
-require 'summarize'
-
-task :make_summary => :environment do
-    print "sdijfodsofjosdif"
-    Article.find(11).
-end
