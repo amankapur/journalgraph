@@ -7,7 +7,11 @@ Journalgraph::Application.routes.draw do
 
   match '/showall' => 'articles#show_all'
   match '/getrelated' => 'articles#get_related'
-  
+  match '/getauthors' => 'articles#show_authors'
+
+  match '/getworks' => 'articles#get_works'
+
+  match '/getrelatedauthors' => 'articles#get_related_authors'
   root to: 'articles#index'
 
   # The priority is based upon order of creation:

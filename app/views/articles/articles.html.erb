@@ -7,19 +7,29 @@
 
     <table>
       <tr class="row">
+        <th class="span2"> id </th>
         <th class="span5">Title</th>
         <th class="span2">Arxiv url</th>
+        <!-- <th class="span4">Authors </th> -->
         <th class="span5">Summary</th>
+
       </tr>
      
       <% @articles.each do |article| %>
-        <tr class="row <%= cycle('evenrow', 'oddrow') -%>">
+        <tr class="row <%= cycle('evenrow', 'oddrow') -%>" id="<%= article.arxiv_id%>">
+          <td class="span2"><%= article.id %></td>
           <td class="span5"><%= article.title %></td>
           <td class="span2"><%= link_to "View Paper", article.arxiv_url %></td>
+
+
           <td class="span5"><%= truncate(article.summary, length: 300) %></td>
-          <% if article.friendships !=[] %>
-          <td class="span4"><button class="btn related" id= "<%=article.arxiv_id%>"> View Related Papers </button> </td>
-          <% end %>
+
+          <td class="span4">
+            <button class="btn related" id= "<%=article.arxiv_id%>"> View Related Papers </button> 
+            <button class="btn show_authors" id= "<%=article.arxiv_id%>"> Show All Authors </button>
+          </td>
+
+          
         </tr>  
       <% end %>
     </table>

@@ -1,5 +1,7 @@
 $(function(){
 
+	
+
 	$(".magic").on('click', function(){
 		query = $('input').val();
 		console.log(query);
@@ -21,7 +23,7 @@ $(function(){
 	});
 
 	$("body").on('click', ".related", function(){
-		console.log('hi');
+		// console.log('hi');
 		id = $(this).attr('id');
 		console.log(id);
 
@@ -30,5 +32,34 @@ $(function(){
 		});
 	});
 
+	$("body").on('click', ".show_authors", function(){
+		// console.log('hi');
+		id = $(this).attr('id');
+		console.log(id);
+
+		$.post('/getauthors	', {'query': id}, function(data){
+			$(".results").html($(data).find('#authors'));
+		});
+	});	
+
+	$("body").on('click', ".get_works_author", function(){
+		// console.log('hi');
+		id = $(this).attr('id');
+		console.log(id);
+
+		$.post('/getworks	', {'query': id}, function(data){
+			$(".results").html($(data).find('#articles'));
+		});
+	});	
+
+	$("body").on('click', ".get_related_authors", function(){
+		// console.log('hi');
+		id = $(this).attr('id');
+		console.log(id);
+
+		$.post('/getrelatedauthors	', {'query': id}, function(data){
+			$(".results").html($(data).find('#authors'));
+		});
+	});	
 
 });
