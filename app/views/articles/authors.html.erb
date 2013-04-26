@@ -1,18 +1,34 @@
 
 
-<table>
-  <tr class="row">
-    <th class="span3">Name</th>
-    <th class="span2">Show Papers</th>
-  </tr>
+<div id="authors">
 
 
-  <% @authors.each do |author| %>
-    <tr class="row <%= cycle('evenrow', 'oddrow') -%>">
-      <td class="span5"><%= article.name %></td>
-      <!-- <td class="span2"><%= link_to "View Paper", article.arxiv_url %></td> -->
-    </tr>
+  <% if @authors != [] %>
+
+    <table>
+      <tr class="row">
+        <th class="span2"> Author id </th>
+        <th class="span2"> Author Name </th>
+      </tr>
+     
+      <% @authors.each do |author| %>
+        <tr class="row <%= cycle('evenrow', 'oddrow') -%>" id="<%= author.id%>">
+          <td class="span2"><%= author.id %></td>
+          <td class="span2"><%= author.name %></td>
+          <td class="span4">
+            <button class="btn get_works_author" id="<%= author.id%>"> Get All papers </button>
+            <button class="btn get_related_authors" id="<%= author.id%>"> Get Related Authors </button>
+          </td>
+        </tr>  
+      <% end %>
+    </table>
+
+  <% else %>
+
+  <h1> <%= @msg %></h1>
+
   <% end %>
 
 
-</table>
+
+</div>

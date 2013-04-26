@@ -26,18 +26,107 @@ class ArticlesController < ApplicationController
   def search
     # puts params['query']
     
-
-    
   end
+
+
+  def get_works
+    tag = params['query']
+
+    @articles = get_articles(tag)
+    
+    @found = 1  
+    if @articles.nil?
+      @msg = "None found, try again..."
+      @found = 0
+      @articles = []
+    end
+
+    render "articles"
+
+  end
+
+  def get_articles(author_id)
+
+    @author = Author.find(author_id)
+
+    @articles = []
+    @author.creations.each do |creation|
+      temp = Article.find(creation.article_id)
+
+      if !@articles.include? temp
+        @articles << Article.find(creation.article_id)
+      end
+
+    end
+    # puts "ARTICLES"
+
+    # ap @articles
+
+    return @articles
+  end
+
+
+  def show_authors
+    tag = params['query']
+
+    @article = Article.where('arxiv_id = ?', tag).first
+    @authors = @article.authors
+    # puts authors
+
+    @found = 1
+    if @authors.nil?
+      @msg = "None found, try again..."
+      @found = 0
+      @authors = []
+    end
+
+    render "authors"
+  end    
+
+
+
+  def get_related_authors
+    tag = params['query']
+
+    @articles = get_articles(tag)
+    # puts 'ARTICLES'
+    # ap @articles
+
+    @related_articles = []
+    @authors = []
+
+    @articles.each do |article|
+      puts "ARTIClE ID "
+      puts article.arxiv_id
+      getRelatedPapers(article.arxiv_id, -1).each do |related|
+
+        authors = related.authors
+        authors.each do |author|
+
+          if !@authors.include?(author)
+            @authors << author
+          end
+
+        end
+      end
+    end
+    
+
+    @found = 1
+    if @authors == []
+      @msg = "None found, try again..."
+      @found = 0
+    end
+
+    render "authors"
+  end    
+
 
   def get_related
     tag = params['query']
 
 
-    @articles = getRelatedPapers(tag)
-
-    
-
+    @articles = getRelatedPapers(tag, 3)
     @found = 1
     if @articles.nil?
       @msg = "None found, try again..."
@@ -48,20 +137,18 @@ class ArticlesController < ApplicationController
     render "articles"
   end
 
-  def getRelatedPapers(curr_id)
+  def getRelatedPapers(curr_id, n)
     @article = Article.where('arxiv_id = ?', curr_id).first
-
+    
+    puts @article
     if @article == [] || @article.nil?
+      puts 'articles NOT found'
       return nil
     end
     @valid_friends = []
 
     @friends = @article.friendships
 
-    if @friends == [] || @friends.nil?
-      puts 'no friends of article ' + curr_id.to_s
-      return nil
-    end
 
     @friends.each do |friendship|
       friend = Article.find(friendship.friend_id)
@@ -70,8 +157,18 @@ class ArticlesController < ApplicationController
       end
     end
 
+    Friendship.find(:all, conditions: {friend_id: @article.id}).each do |cited_by|
+      @valid_friends << Article.find(cited_by.article_id)
+      puts 'ADDED CITED BY'
+    end
+
     puts "valid_friends"
     puts @valid_friends
+
+    if @valid_friends == []
+      puts 'NO VALID FRIENDS'
+      return nil
+    end
 
     temp = Hash.new()
 
@@ -108,26 +205,14 @@ class ArticlesController < ApplicationController
     puts "FINAL"
     puts @final_articles
 
-    return @final_articles.last(3)
+    if n == -1
+      return @final_articles
+    else 
+      return @final_articles.last(n)
+    end
 
   end
 
-  # def getScore(keywords1, keywords2)
-
-  #   if keywords1.length > 0 && keywords2.length > 0
-  #     if keywords1.first == keywords2.first       # COMPLETE MATCH
-  #       return 1 + getScore(keywords1[1..-1], keywords2[1..-1])
-  #     end
-  #     if keywords1.first.include?(keywords2.first) || keywords2.first.include?(keywords1.first) #PARTIAL MATCH
-  #       return 0.75 + getScore(keywords1[1..-1], keywords2[1..-1])
-  #     end
-  #     return -0.25 + getScore(keywords1[1..-1], keywords2[1..-1]) # NO MATCH
-
-  #   else
-  #     return 0
-  #   end
-  
-  # end
 
   def lev_distance(a, b)
     case
