@@ -16,3 +16,5 @@
 
 # Ignore research articles.
 /public/research
+
+out.gml
