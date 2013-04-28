@@ -7,92 +7,46 @@ require 'RubyDataStructures'
 task :extendgraph => :environment do
 
 	
-	id = "gr-qc/9809040v2" # ENTER ID OF ROOT NODE OF EXTENSION
-	query_result = parseArxivId(id)
+
+	arr = [39]
+	
+
+	arr.each do |id|
+		complete_graph(id)
+	end
+
+end
+
+def complete_graph(id)
+
+	@article = Article.find(id)
+
+	query_result = parseArxivId(@article.arxiv_id)
 	# ap query_result
 
+	citations = query_result[10]
+
+	citations.each do |citation|
+		make_node(@article, citation)
+	end
+end
 
 	#attr_accessible :arxiv_id, :arxiv_url, :published_date, :summary, :title, :update_date, :journal_ref, :doi, :comment, :category
 	#data[id] = [url, updated, published, title, summary, doi, comment, journal_ref, primary_category, authors_data, citations]
 
+def make_node(article, id)
 
-	max_count = 2000
-
-	queue = RubyDataStructures::QueueAsArray.new(1000)
-
-	
-	queue.enqueue(query_result)
-
-	while !queue.empty?
-		data = queue.dequeue()
-		# ap data
-		if data
-			# puts 'data id is   :::    ' + data[11].to_s
+	if Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{id}%"]) == nil
+		data = parseArxivId(id)
+		new_article = createArticle(data)
+		article.friendships.build(friend_id: new_article.id).save	
+	else 
+		old_article = Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{id}%"])
+		if Friendship.where(article_id: article.id, friend_id: old_article.id) ==[]
+			article.friendships.build(friend_id: old_article.id).save	
 		end
-		if data[10].length > 100
-			next
-		end
-
-		tag = data[11]
-		if Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{tag}%"])  == nil
-			@article = createArticle(data)
-		else
-			puts 'Article already exists'
-
-			@article = Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{tag}%"])
-		end
-
-		# puts @article.creations
-
-		authors = data[9]
-		# puts authors
-		# puts 'AUTHOR LENGTH is :::::  ' + authors.length.to_s
-		authors.each do |author, value|
-			if Author.where(name: author) == []
-				@author = Author.create(name: author)
-				@article.creations.build(author_id: @author.id).save
-				puts 'author created'
-			else
-				@author = Author.where(name: author).first
-				@article.creations.build(author_id: @author.id).save
-				puts 'author existed'
-			end
-		end
-
-		citations = data[10]
-		# puts citations
-		citations.each do |citation|
-			# ap citation
-			data = parseArxivId(citation)
-
-			if Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{citation}%"]) == nil
-				@cited_article = createArticle(parseArxivId(citation))
-				@article.friendships.build(friend_id: @cited_article.id).save	
-				puts 'citation article created'	
-			else
-				@cited_article = Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{citation}%"])
-				if Friendship.where(article_id: @article.id, friend_id: @cited_article.id) == []
-					@article.friendships.build(friend_id: @cited_article.id).save	
-					
-					puts 'edge made with existing article...'
-					puts @article.id
-					puts @cited_article.id	
-				end
-			end
-
-			if Article.count < max_count
-				queue.enqueue(data)
-			else
-				puts 'REACHED MAXIMUM##################### '
-			end
-
-		end #each citation loop
-
-	end  #end while
-
-end #end task
-
-
+	end
+end
 
 
 def createArticle(data)
@@ -109,6 +63,7 @@ def createArticle(data)
 				journal_ref: data[7], 
 				category: data[8]
 				)
+
 end
 
 
