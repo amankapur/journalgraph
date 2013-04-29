@@ -1,8 +1,17 @@
 $(function(){
 
+	$("#query").keypress(function(e){
+		if(e.which == 13){
+			doMagic();
+		}
+	});
 	
 
 	$(".magic").on('click', function(){
+		doMagic();
+	});	
+
+	var doMagic = function(){
 		query = $('input').val();
 		console.log(query);
 		
@@ -14,7 +23,7 @@ $(function(){
 
 		});
 
-	});
+	}
 
 	$("#showall").on('click', function(){
 		$.get('/showall', function(data){
