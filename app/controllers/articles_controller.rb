@@ -1,5 +1,6 @@
 require 'awesome_print'
 require 'levenshtein'
+require 'tf_idf'
 
 class ArticlesController < ApplicationController
   # GET /articles

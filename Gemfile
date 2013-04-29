@@ -12,7 +12,7 @@ gem 'RubyDataStructures'
 gem 'graph'
 gem 'summarize'
 gem 'levenshtein-ffi', :require => 'levenshtein'
-
+gem 'tf_idf'
 
 # Gems used only for assets and not required
 # in production environments by default.
