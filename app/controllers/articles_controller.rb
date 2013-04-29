@@ -24,8 +24,54 @@ class ArticlesController < ApplicationController
   end
 
 
+  def score(article_tf,terms)
+    score = 0
+    terms.each do |term|
+      if article_tf[term]
+        score += article_tf[term]
+      end
+    end
+    return score
+  end
+
   def search
-    # puts params['query']
+    query = params['query']
+    terms = query.split(' ')
+    puts terms
+    articles_bool = []
+    terms.each do |term|
+      matches = Article.find(:all, conditions: ['keywords LIKE ?', "%#{term}%"])
+      matches.each do |article|
+        articles_bool << article
+      end
+    end
+
+    corpus = []
+    score_map = {}
+
+    articles_bool.each do |article|
+      summary = article.summary
+      split_summary = summary.split(' ')
+      corpus << split_summary
+      article_tf = TfIdf.new([split_summary])
+      ap article_tf.tf[0]
+      score_map[article] = score(article_tf.tf[0],terms)
+    end
+
+    analysis = TfIdf.new(corpus)
+    analyzed = analysis.idf
+
+    @articles = articles_bool.sort_by { |article|
+      score_map[article]
+    }
+
+    @found = 1
+    if @articles.nil?
+      @msg = "None found, try again..."
+      @found = 0
+      @articles = []
+    end
+    render "articles"
     
   end
 
