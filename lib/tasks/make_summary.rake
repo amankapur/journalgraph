@@ -2,7 +2,7 @@ require 'rubygems'
 require 'summarize'
 
 task :make_summary => :environment do
-    all_articles = Article.all
+    all_articles = Article.find(:all, conditions: {keywords: nil})
     all_articles.each do |article|
         text = article.summary
         if text

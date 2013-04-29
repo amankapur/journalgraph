@@ -11,7 +11,7 @@ task :export_gml => :environment do
   articles.each do |article|
     puts 'node ['
     puts 'id ' + article.id.to_s
-    puts 'label "' + article.title.to_s + '"'
+    puts 'label "' + article.id.to_s + '"'
     puts ']'
   end
 

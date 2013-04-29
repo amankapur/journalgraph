@@ -11,6 +11,7 @@ gem 'awesome_print'
 gem 'RubyDataStructures'
 gem 'graph'
 gem 'summarize'
+gem 'levenshtein-ffi', :require => 'levenshtein'
 
 
 # Gems used only for assets and not required

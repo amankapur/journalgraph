@@ -1,4 +1,5 @@
 require 'awesome_print'
+require 'levenshtein'
 
 class ArticlesController < ApplicationController
   # GET /articles
@@ -126,7 +127,7 @@ class ArticlesController < ApplicationController
     tag = params['query']
 
 
-    @articles = getRelatedPapers(tag, 3)
+    @articles = getRelatedPapers(tag, -1)
     @found = 1
     if @articles.nil?
       @msg = "None found, try again..."
@@ -175,7 +176,7 @@ class ArticlesController < ApplicationController
     @valid_friends.each do |friend|
       keywords = @article.keywords.split(',')
       friend_keywords = friend.keywords.split(',')
-      score = lev_distance(keywords, friend_keywords)
+      score = get_score(keywords, friend_keywords)
       puts "SCORE"
       puts score
 
@@ -208,13 +209,32 @@ class ArticlesController < ApplicationController
     if n == -1
       return @final_articles
     else 
-      return @final_articles.last(n)
+      return @final_articles.first(n)
     end
 
   end
 
+  def get_score(arr1, arr2)
+    score = 0
+
+    min = arr1
+
+    if arr2.length < arr1.length
+      min = arr2
+    end
+
+    for i in 0..min.length
+      if !arr1[i].nil? && !arr2[i].nil?
+        score += Levenshtein.distance(arr1[i], arr2[i])  
+      end
+    end
+
+    return score
+  end
+
 
   def lev_distance(a, b)
+    puts 'finding lev'
     case
       when a.empty? then b.length
       when b.empty? then a.length
