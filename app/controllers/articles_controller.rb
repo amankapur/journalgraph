@@ -28,38 +28,46 @@ class ArticlesController < ApplicationController
   def score(article_tf,terms,idf)
     tf_score = 0
     idf_score = 0
-    terms.each do |term|
-      if article_tf[term]
-        tf_score += article_tf[term]
+
+    if idf
+      terms.each do |term|
+        if article_tf[term]
+          tf_score += article_tf[term]
+        end
+        if article_tf[term]
+          idf_score += idf[term]
+        end
       end
-      if article_tf[term]
-        idf_score += idf[term]
+      return tf_score*idf_score
+    else
+      terms.each do |term|
+        if article_tf[term]
+          tf_score += article_tf[term]
+        end
       end
+      return tf_score
     end
-    return tf_score*idf_score
-  end
-
-  def handleQuery
-    puts "AMAN IS A FUCKING SOLDIER"
-    @articles = ["hi","dshf"]
-=begin
-  params will contain checkbox inputs
-  use this to figure out logic
-  call search eventually
-
-  three methods
-  tfsearch
-  tfidfsearch
-  pagerank
-  allsearch
-=end
-    render "articles"
   end
 
   def search
     query = params['query']
+
+    #@articles = search_bool(query)
+    #@articles = search_TF(query)
+    @articles = search_TFIDF(query)
+
+    @found = 1
+    if @articles.nil?
+      @msg = "None found, try again..."
+      @found = 0
+      @articles = []
+    end
+    render "articles"
+    
+  end
+
+  def search_bool(query)
     terms = query.split(' ')
-    puts terms
     articles_bool = []
     terms.each do |term|
       matches = Article.find(:all, conditions: ['summary LIKE ? and title LIKE ?', "%#{term}%", "%#{term}%"])
@@ -69,6 +77,46 @@ class ArticlesController < ApplicationController
         end
       end
     end
+
+    return articles_bool
+    
+  end
+
+  def search_TF(query)
+    terms = query.split(' ')
+    puts terms
+    articles_bool = search_bool(query)
+
+    corpus = []
+    articles_bool.each do |article|
+      summary = article.summary
+      split_summary = summary.split(' ')
+      corpus << split_summary
+    end
+
+    analyzed = nil
+
+    score_map = {}
+    articles_bool.each do |article|
+      summary = article.summary
+      split_summary = summary.split(' ')
+      article_tf = TfIdf.new([split_summary])
+      score_map[article] = score(article_tf.tf[0],terms,analyzed)
+    end
+
+    @articles = articles_bool.sort_by { |article|
+      -score_map[article]
+    }
+
+    return @articles
+    
+  end
+
+
+  def search_TFIDF(query)
+    terms = query.split(' ')
+    puts terms
+    articles_bool = search_bool(query)
 
     corpus = []
     articles_bool.each do |article|
@@ -92,16 +140,9 @@ class ArticlesController < ApplicationController
       -score_map[article]
     }
 
-    @found = 1
-    if @articles.nil?
-      @msg = "None found, try again..."
-      @found = 0
-      @articles = []
-    end
-    render "articles"
+    return @articles
     
   end
-
 
   def get_works
     tag = params['query']
