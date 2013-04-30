@@ -25,14 +25,18 @@ class ArticlesController < ApplicationController
   end
 
 
-  def score(article_tf,terms)
-    score = 0
+  def score(article_tf,terms,idf)
+    tf_score = 0
+    idf_score = 0
     terms.each do |term|
       if article_tf[term]
-        score += article_tf[term]
+        tf_score += article_tf[term]
+      end
+      if article_tf[term]
+        idf_score += idf[term]
       end
     end
-    return score
+    return tf_score*idf_score
   end
 
   def search
@@ -41,29 +45,34 @@ class ArticlesController < ApplicationController
     puts terms
     articles_bool = []
     terms.each do |term|
-      matches = Article.find(:all, conditions: ['keywords LIKE ?', "%#{term}%"])
+      matches = Article.find(:all, conditions: ['summary LIKE ? and title LIKE ?', "%#{term}%", "%#{term}%"])
       matches.each do |article|
-        articles_bool << article
+        if !articles_bool.include? article
+          articles_bool << article
+        end
       end
     end
 
     corpus = []
-    score_map = {}
-
     articles_bool.each do |article|
       summary = article.summary
       split_summary = summary.split(' ')
       corpus << split_summary
-      article_tf = TfIdf.new([split_summary])
-      ap article_tf.tf[0]
-      score_map[article] = score(article_tf.tf[0],terms)
     end
 
     analysis = TfIdf.new(corpus)
     analyzed = analysis.idf
 
+    score_map = {}
+    articles_bool.each do |article|
+      summary = article.summary
+      split_summary = summary.split(' ')
+      article_tf = TfIdf.new([split_summary])
+      score_map[article] = score(article_tf.tf[0],terms,analyzed)
+    end
+
     @articles = articles_bool.sort_by { |article|
-      score_map[article]
+      -score_map[article]
     }
 
     @found = 1
