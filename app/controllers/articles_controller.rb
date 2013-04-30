@@ -255,12 +255,17 @@ class ArticlesController < ApplicationController
         temp[score[0]].each do |article|
           puts "ARTICLE"
           puts article
-          @final_articles << article
+          if !@final_articles.include? article
+            if article.id != @article.id
+              @final_articles << article
+            end
+          end
         end
 
     end
     puts "FINAL"
     puts @final_articles
+
 
     if n == -1
       return @final_articles
