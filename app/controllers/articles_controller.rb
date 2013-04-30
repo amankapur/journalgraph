@@ -58,7 +58,8 @@ class ArticlesController < ApplicationController
       when 'boolean' then @articles = search_bool(query)
       when 'tf' then @articles = search_TF(query)
       when 'tfidf' then @articles = search_TFIDF(query)
-      when 'pagerank' then @articles = search_TFIDF_pagerank(query)
+      when 'pagerank' then @articles = search_pagerank(query)
+      when 'tfidfpagerank' then @articles = search_TFIDF_pagerank(query)
       else @articles = nil
     end
 
@@ -74,19 +75,13 @@ class ArticlesController < ApplicationController
   end
 
   def search_bool(query)
-    ap "!!!!!!!!!!!!!!!!!!! SEARCH BOOL CALLED WITH query " + query.to_s
     terms = query.split(' ')
-
-    ap "!!!!!!!! TERMS "
-    ap terms
 
     articles_bool = []
     terms.each do |term|
-      ap "!!!!!! TERM !!!!"
-      ap term
+
       matches = Article.find(:all, conditions: ['summary LIKE ? and title LIKE ?', "%#{term}%", "%#{term}%"])
-      ap "!!!!!!!! MATCHES !!!!!"
-      ap matches
+
       matches.each do |article|
         if !articles_bool.include? article
           articles_bool << article
@@ -159,6 +154,18 @@ class ArticlesController < ApplicationController
     
   end
 
+  def search_pagerank(query)
+    terms = query.split(' ')
+    puts terms
+    articles_bool = search_bool(query)
+
+    @articles = articles_bool.sort_by { |article|
+      pagerank = 1.0/article.keywords.length
+      puts pagerank
+      -(pagerank)
+    }
+    return @articles
+  end
 
   def search_TFIDF_pagerank(query)
     terms = query.split(' ')
@@ -166,6 +173,7 @@ class ArticlesController < ApplicationController
     articles_bool = search_bool(query)
 
     corpus = []
+
     articles_bool.each do |article|
       summary = article.summary
       split_summary = summary.split(' ')
