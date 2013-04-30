@@ -51,12 +51,18 @@ class ArticlesController < ApplicationController
 
   def search
     query = params['query']
+    searchtype = params['searchtype']
+    ap "searchtype!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    ap searchtype
+    case searchtype
+      when 'boolean' then @articles = search_bool(query)
+      when 'tf' then @articles = search_TF(query)
+      when 'tfidf' then @articles = search_TFIDF(query)
+      when 'pagerank' then @articles = search_TFIDF_pagerank(query)
+      else @articles = nil
+    end
 
-    #@articles = search_bool(query)
-    #@articles = search_TF(query)
-    @articles = search_TFIDF(query)
-    #@articles = search_TFIDF_pagerank(query)
-
+    ap @articles
     @found = 1
     if @articles.nil?
       @msg = "None found, try again..."
@@ -68,10 +74,19 @@ class ArticlesController < ApplicationController
   end
 
   def search_bool(query)
+    ap "!!!!!!!!!!!!!!!!!!! SEARCH BOOL CALLED WITH query " + query.to_s
     terms = query.split(' ')
+
+    ap "!!!!!!!! TERMS "
+    ap terms
+
     articles_bool = []
     terms.each do |term|
+      ap "!!!!!! TERM !!!!"
+      ap term
       matches = Article.find(:all, conditions: ['summary LIKE ? and title LIKE ?', "%#{term}%", "%#{term}%"])
+      ap "!!!!!!!! MATCHES !!!!!"
+      ap matches
       matches.each do |article|
         if !articles_bool.include? article
           articles_bool << article

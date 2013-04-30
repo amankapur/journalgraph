@@ -2,12 +2,20 @@
     <h1>Journal Graph</h1>
 </div>
 
-<div id="searchbox">
+<div id="searchbox" class="row">
     <div class="span2">
         <input id="query" type="text" name="query" placeholder="Entry your request here...">
     </div>
     <div class="span2">
         <button class="btn magic"> Magic </button>
+    </div>
+    <div class="span5">
+        <form>
+            <input type="radio" name="search_type" id="boolean" checked> Boolean match
+            <input type="radio" name="search_type" id="tf"> TF
+            <input type="radio" name="search_type" id="tfidf"> TFIDF
+            <input type="radio" name="search_type" id="pagerank"> TFIDF and PageRank
+        </form>
     </div>
 
     <div class="span2">

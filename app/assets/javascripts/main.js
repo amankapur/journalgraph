@@ -12,10 +12,13 @@ $(function(){
 	});	
 
 	var doMagic = function(){
-		query = $('input').val();
+		query = $('#query').val();
 		console.log(query);
+
+		searchtype = $("input[type=radio]:checked").attr('id')
+		console.log(searchtype);
 		
-		$.post('/query', {query: query}, function(data){
+		$.post('/query', {query: query, searchtype: searchtype}, function(data){
 
 			console.log(data);
 
