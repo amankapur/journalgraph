@@ -39,6 +39,23 @@ class ArticlesController < ApplicationController
     return tf_score*idf_score
   end
 
+  def handleQuery
+    puts "AMAN IS A FUCKING SOLDIER"
+    @articles = ["hi","dshf"]
+=begin
+  params will contain checkbox inputs
+  use this to figure out logic
+  call search eventually
+
+  three methods
+  tfsearch
+  tfidfsearch
+  pagerank
+  allsearch
+=end
+    render "articles"
+  end
+
   def search
     query = params['query']
     terms = query.split(' ')
