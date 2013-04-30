@@ -11,16 +11,15 @@ task :authorcomplete => :environment do
     end
 
     i = 0
-    count = 60
+    count = todo_articles.length
     puts "TODO ARTICLES LEFT: ", todo_articles.length
     
-    while i < count
-    	if todo_articles[i]
-	    	doAuthor(todo_articles[i])
-	    	i+= 1
-	    end
-    end
-
+    # while i < count
+    # 	if todo_articles[i]
+	   #  	doAuthor(todo_articles[i])
+	   #  	i+= 1
+	   #  end
+    # end
 end
 
 

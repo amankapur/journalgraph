@@ -6,20 +6,29 @@ require 'RubyDataStructures'
 
 task :extendgraph => :environment do
 
-	
+	start = 1
+	ending = 4
 
-	arr = [39]
-	
+	arr = []
+	(start..ending).each do |i|
+		arr << i 
+	end
 
 	arr.each do |id|
+		# a = gets.comp
 		complete_graph(id)
 	end
 
 end
 
 def complete_graph(id)
-
+	puts id
 	@article = Article.find(id)
+
+	if @article == [] || @article.nil?
+		puts "ARTICLE NOT FOUND!!"
+		return nil
+	end
 
 	query_result = parseArxivId(@article.arxiv_id)
 	# ap query_result
@@ -27,6 +36,7 @@ def complete_graph(id)
 	citations = query_result[10]
 
 	citations.each do |citation|
+		puts citation
 		make_node(@article, citation)
 	end
 end
@@ -37,8 +47,9 @@ end
 def make_node(article, id)
 
 	if Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{id}%"]) == nil
+		puts 'making new node'
 		data = parseArxivId(id)
-		new_article = createArticle(data)
+		new_article = create_Article(data)
 		article.friendships.build(friend_id: new_article.id).save	
 	else 
 		old_article = Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{id}%"])
@@ -49,9 +60,9 @@ def make_node(article, id)
 end
 
 
-def createArticle(data)
+def create_Article(data)
 
-	return Article.create(
+	new_article =  Article.create(
 				arxiv_id: data[11], 
 				arxiv_url: data[0],
 				update_date: data[1],
@@ -63,6 +74,11 @@ def createArticle(data)
 				journal_ref: data[7], 
 				category: data[8]
 				)
+
+	puts 'creating Article'
+	do_Author(new_article, data)
+
+	return new_article
 
 end
 
@@ -86,6 +102,36 @@ def getReferences(url)
 
 end
 
+def do_Author(article, data)
+	
+	puts 'do_Author'
+
+	id = article.arxiv_id
+	all_data = data
+	create_Authors(article, all_data[9])
+
+end
+
+
+def create_Authors(article, authors)
+	@article = article
+
+	puts 'createAuthors'
+	ap authors
+
+	authors.each do |author, value|
+		if Author.where(name: author) == []
+			@author = Author.create(name: author)
+			@article.creations.build(author_id: @author.id).save
+			puts 'author created'
+		else
+			@author = Author.where(name: author).first
+			@article.creations.build(author_id: @author.id).save
+			puts 'author existed'
+		end
+	end
+
+end
 
 def parseArxivId(arg_id)
 	url = 'http://export.arxiv.org/api/query?id_list=' + arg_id
