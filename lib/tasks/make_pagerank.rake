@@ -30,11 +30,19 @@ task :make_pagerank => :environment do
 
 	ranks = pagerank(mat)
 
+	puts "Finished calculating matrix!"
+
+	v = []
+
+	ranks.each(:all) do |item|
+		v << item
+	end
+
+	ap v
+
 	(0..amount).each do |i|
-		if i%100 == 0
-			puts i + " ranks[i] = " + ranks[i]
-		end
-		#Article.find(i+1).update_attributes(pagerank: ranks[i])
+		#puts v[i]
+		Article.find(i+1).update_attributes(pagerank: v[i])
 	end
 
 end

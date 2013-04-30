@@ -55,6 +55,7 @@ class ArticlesController < ApplicationController
     #@articles = search_bool(query)
     #@articles = search_TF(query)
     @articles = search_TFIDF(query)
+    #@articles = search_TFIDF_pagerank(query)
 
     @found = 1
     if @articles.nil?
@@ -112,7 +113,6 @@ class ArticlesController < ApplicationController
     
   end
 
-
   def search_TFIDF(query)
     terms = query.split(' ')
     puts terms
@@ -137,7 +137,41 @@ class ArticlesController < ApplicationController
     end
 
     @articles = articles_bool.sort_by { |article|
-      -score_map[article]
+      -(score_map[article])
+    }
+
+    return @articles
+    
+  end
+
+
+  def search_TFIDF_pagerank(query)
+    terms = query.split(' ')
+    puts terms
+    articles_bool = search_bool(query)
+
+    corpus = []
+    articles_bool.each do |article|
+      summary = article.summary
+      split_summary = summary.split(' ')
+      corpus << split_summary
+    end
+
+    analysis = TfIdf.new(corpus)
+    analyzed = analysis.idf
+
+    score_map = {}
+    articles_bool.each do |article|
+      summary = article.summary
+      split_summary = summary.split(' ')
+      article_tf = TfIdf.new([split_summary])
+      score_map[article] = score(article_tf.tf[0],terms,analyzed)
+    end
+
+    @articles = articles_bool.sort_by { |article|
+      pagerank = 1.0/article.keywords.length
+      puts pagerank
+      -(score_map[article]+pagerank)
     }
 
     return @articles
