@@ -46,6 +46,7 @@ To compute PageRank, we first generate the transition probability matrix for our
 Here is an example transition probability matrix, where each directed edge coming out of a node is weighted by 1/n,
 and n is that node's total number of outgoing edges.
 
+```
      a   b   c   d
  a | 0   0  .33  0  |
  b | 1   0  .33  0  |
@@ -58,6 +59,7 @@ This matrix represents the following graph:
  |   /   |
  | /     |/
  c ----> d
+```
 
 Each row in the matrix corresponds to an article which is being cited.
 As you can see, article a cites article b, so its edge has weight 1.
