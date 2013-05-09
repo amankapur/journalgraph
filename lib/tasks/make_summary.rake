@@ -1,3 +1,12 @@
+=begin
+
+Usage: rake make_summary
+Runs a summarization program on each article in the database.
+1. Obtains a set of keywords deemed to be important to each article.
+2. Updates the "keywords" field for each article entry
+	
+=end
+
 require 'rubygems'
 require 'summarize'
 

@@ -1,12 +1,22 @@
+=begin
+
+Usage: rake export_gml > out.gml
+This will print the entire graph database out to a standard graph file format
+
+=end
+
+
 require 'rubygems'
 require 'graph'
 
 task :export_gml => :environment do
+  # print GML header
   puts 'graph ['
   puts 'comment "This is a friendship visualization for arxiv"'
   puts 'directed 1'
-  puts 'label "Hi I am dat pretty mofo"'
+  puts 'label "This a label"'
 
+  # print all nodes
   articles = Article.all
   articles.each do |article|
     puts 'node ['
@@ -15,6 +25,7 @@ task :export_gml => :environment do
     puts ']'
   end
 
+  # print all edges
   friendships = Friendship.all
   friendships.each do |friendship|
     puts 'edge ['
@@ -28,25 +39,3 @@ task :export_gml => :environment do
   puts ']'
 
 end
-=begin
-  digraph do
-
-    friendships = Friendship.all
-
-    friendships.each do |friendship|
-      # puts friendship.friend_id
-      # puts friendship.article_id
-
-      edge friendship.friend_id friendship.article_id
-      
-    end
-
-    node_attribs << lightblue << filled
-    save 'languages', 'png'
-
-  end
-=end
-
-#puts: inserts newline
-#print: no newline
-#p: in quotes

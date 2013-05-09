@@ -1,3 +1,14 @@
+=begin
+
+Usage: rake authorcomplete
+
+We ran into rate-limiting issues while scraping the arxiv domain
+This caused our graph to be incompete at some parts
+This script allows us to ensure graph integrity by filling in missing authors
+	
+=end
+
+
 require 'rubygems'
 require 'awesome_print'
 
@@ -13,13 +24,7 @@ task :authorcomplete => :environment do
     i = 0
     count = todo_articles.length
     puts "TODO ARTICLES LEFT: ", todo_articles.length
-    
-    # while i < count
-    # 	if todo_articles[i]
-	   #  	doAuthor(todo_articles[i])
-	   #  	i+= 1
-	   #  end
-    # end
+
 end
 
 
@@ -29,17 +34,6 @@ def doAuthor(article)
 	puts 'COMPLETEING ID ', article.id
 
 	all_data = parseArxivId(id)
-
-	puts "!!!!!! BEFORE COUNT !!!!!!!"
-
-	puts article.authors.length
-	puts article.friendships.length
-
-
-	puts "!!!!!! DATA COUNT !!!!!"
-	# ap all_data[9]
-
-	# ap all_data[10]
 
 	puts all_data[9].length
 	puts all_data[10].length

@@ -1,3 +1,14 @@
+=begin
+
+Usage: rake completegraph
+
+We ran into rate-limiting issues while scraping the arxiv domain
+This caused our graph to be incompete at some parts
+This script allows us to ensure graph integrity by filling in missing articles and links
+	
+=end
+
+
 require 'rubygems'
 require 'awesome_print'
 require 'summarize'

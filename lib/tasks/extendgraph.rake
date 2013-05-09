@@ -1,3 +1,12 @@
+=begin
+
+Usage: rake extendgraph
+Given an initial graph, we can choose which nodes to explore one level further
+This helps us extend our graph in a controlled manner,
+  ensuring we don't get rate-limited or banned from the arxiv domain
+
+=end
+
 require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
@@ -15,11 +24,12 @@ task :extendgraph => :environment do
 	end
 
 	arr.each do |id|
-		# a = gets.comp
 		complete_graph(id)
 	end
 
 end
+
+
 
 def complete_graph(id)
 	puts id
@@ -31,7 +41,6 @@ def complete_graph(id)
 	end
 
 	query_result = parseArxivId(@article.arxiv_id)
-	# ap query_result
 
 	citations = query_result[10]
 
@@ -41,8 +50,8 @@ def complete_graph(id)
 	end
 end
 
-	#attr_accessible :arxiv_id, :arxiv_url, :published_date, :summary, :title, :update_date, :journal_ref, :doi, :comment, :category
-	#data[id] = [url, updated, published, title, summary, doi, comment, journal_ref, primary_category, authors_data, citations]
+
+# Creates a new database by article id
 
 def make_node(article, id)
 
@@ -59,6 +68,8 @@ def make_node(article, id)
 	end
 end
 
+
+# Creates a new database entry given data from scraping
 
 def create_Article(data)
 
@@ -83,6 +94,8 @@ def create_Article(data)
 end
 
 
+# Gets the arxiv ids of the citations of an article by url
+
 def getReferences(url)
 	citations = []
 	puts url
@@ -102,6 +115,9 @@ def getReferences(url)
 
 end
 
+
+# Wrapper function for create_Authors
+
 def do_Author(article, data)
 	
 	puts 'do_Author'
@@ -112,6 +128,8 @@ def do_Author(article, data)
 
 end
 
+
+# For each author in an article, create an author object in our database
 
 def create_Authors(article, authors)
 	@article = article
@@ -133,6 +151,10 @@ def create_Authors(article, authors)
 
 end
 
+
+
+# Scrapes arxiv for the article information from a specific arxiv id
+
 def parseArxivId(arg_id)
 	url = 'http://export.arxiv.org/api/query?id_list=' + arg_id
 
@@ -140,7 +162,6 @@ def parseArxivId(arg_id)
 	query = open(url,'Content-Type' => 'text/xml')
 	doc = Nokogiri::XML(query)
 	namespaces = doc.collect_namespaces()
-	# puts namespaces
 
 	entry = doc.at_xpath('//xmlns:entry')
 
@@ -159,9 +180,7 @@ def parseArxivId(arg_id)
 
 	if url 
 		url = url.content
-		# puts url
 		id = url.match(/abs\/(...*)/)[1]
-		# puts id
 	end
 
 	if updated
@@ -202,15 +221,12 @@ def parseArxivId(arg_id)
 		if author_affiliation
 			author_affiliation = author_affiliation.content
 		end
-		authors_data[author_name] = author_affiliation #this is the mapping ot be stored in authors_data
+		authors_data[author_name] = author_affiliation #this is the mapping to be stored in authors_data
 	end
 
 	refs_url = url.dup
 	refs_url["/abs/"] = "/refs/"
 	citations = getReferences(refs_url)
-
-	#puts "refurl " + refs_url
-	#puts "citation  " + citations.to_s
 
 	final = [url,
 		updated,
@@ -225,6 +241,5 @@ def parseArxivId(arg_id)
 		citations,
 		id]
 
-	#puts namespaces
 	return final
 end

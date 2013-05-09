@@ -1,3 +1,15 @@
+=begin
+
+Usage: rake makedb
+
+Scrapes arxiv using initial conditions set in this program
+For each article being scraped, generates database entries as well as links
+
+We first grab a small set of initial articles
+Then we expand from these articles' citations, ensuring connectedness
+	
+=end
+
 require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
@@ -6,75 +18,64 @@ require 'RubyDataStructures'
 
 task :makedb => :environment do
 
-	#url = 'http://export.arxiv.org/api/query?search_query=abs:electron&cat:hep-lat&start=0&max_results='
+	# Given an initial query, grab the first five articles
 
 	url = 'http://export.arxiv.org/api/query?search_query=abs:energy&start=0&max_results=5'
 	query_result = parseArxivQuery(url)
-	# ap query_result
 
+	max_count = 2000 # Limits the number of articles to grab
 
-	#attr_accessible :arxiv_id, :arxiv_url, :published_date, :summary, :title, :update_date, :journal_ref, :doi, :comment, :category
-	#data[id] = [url, updated, published, title, summary, doi, comment, journal_ref, primary_category, authors_data, citations]
-
-
-	max_count = 2000
-
+	# Put the initial articles in a queue
 	queue = RubyDataStructures::QueueAsArray.new(1000)
-
 	query_result.each do |key, stuff|
 		queue.enqueue(stuff)
 	end
 
-	while !queue.empty?
-		data = queue.dequeue()
-		# ap data
-		if data
-			# puts 'data id is   :::    ' + data[11].to_s
-		end
+
+	while !queue.empty? # While queue is not empty, pop articles off
+		data = queue.dequeue() # For each article popped
+
 		if data[10].length > 100
 			next
 		end
 
 		tag = data[11]
 		if Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{tag}%"])  == nil
-			@article = createArticle(data)
+			@article = createArticle(data) # Generate a database entry
 		else
 			puts 'Article already exists'
 			puts tag
 			@article = Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{tag}%"])
 		end
 
-		# puts @article.creations
-
+		# Generate "Creation" links in our graph (links an author to the article written by the author)
 		authors = data[9]
-		# puts authors
-		# puts 'AUTHOR LENGTH is :::::  ' + authors.length.to_s
 		authors.each do |author, value|
-			if Author.where(name: author) == []
+			if Author.where(name: author) == []	# If author does not exist in database, create the author node and link
 				@author = Author.create(name: author)
 				@article.creations.build(author_id: @author.id).save
 				puts 'author created'
-			else
+			else								# If author already exists, just create the link
 				@author = Author.where(name: author).first
 				@article.creations.build(author_id: @author.id).save
 				puts 'author existed'
 			end
 		end
 
+		# Generate "Friendship" links in our graph (links an article to a cited article)
+		# For each article in the queue, add its cited articles to the queue
 		citations = data[10]
-		# puts citations
 		citations.each do |citation|
-			# ap citation
 			data = parseArxivId(citation)
 
 			if Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{citation}%"]) == nil
 				@cited_article = createArticle(parseArxivId(citation))
-				@article.friendships.build(friend_id: @cited_article.id).save	
-				puts 'citation article created'	
+				@article.friendships.build(friend_id: @cited_article.id).save
+				puts 'citation article created'
 			else
 				@cited_article = Article.find(:first, conditions: ['arxiv_id LIKE ?', "%#{citation}%"])
 				if Friendship.where(article_id: @article.id, friend_id: @cited_article.id) == []
-					@article.friendships.build(friend_id: @cited_article.id).save	
+					@article.friendships.build(friend_id: @cited_article.id).save
 					
 					puts 'edge made with existing article...'
 					puts citation
@@ -97,8 +98,9 @@ end #end task
 
 
 
+# Creates a new database entry
+
 def createArticle(data)
-	# puts 'creating article'
 	return Article.create(
 				arxiv_id: data[11], 
 				arxiv_url: data[0],
@@ -113,12 +115,15 @@ def createArticle(data)
 				)
 end
 
+
+
+# Scrapes arxiv for a single article by url
+
 def parseArxivQuery(url)
 	data = Hash.new
 	query = open(url,'Content-Type' => 'text/xml')
 	doc = Nokogiri::XML(query)
 	namespaces = doc.collect_namespaces()
-	# puts namespaces
 	puts 'parsing Query'
 	doc.xpath('//xmlns:entry').each do |entry|
 
@@ -137,9 +142,7 @@ def parseArxivQuery(url)
 
 		if url 
 			url = url.content
-			# puts url
 			id = url.match(/abs\/(...*)/)[1]
-			# puts id
 		end
 
 		if updated
@@ -168,28 +171,24 @@ def parseArxivQuery(url)
 		end
 
 
-		authors = entry.xpath('.//xmlns:author') #returns a nodeset
+		authors = entry.xpath('.//xmlns:author') # returns a nodeset
 
 		authors_data = Hash.new
 		authors.each do |author|
 			author_name = author.at_xpath('.//xmlns:name')
-			author_affiliation = author.at_xpath('.//arxiv:affiliation',namespaces) #returns a node
+			author_affiliation = author.at_xpath('.//arxiv:affiliation',namespaces) # returns a node
 			if author_name
 				author_name = author_name.content
 			end
 			if author_affiliation
 				author_affiliation = author_affiliation.content
 			end
-			authors_data[author_name] = author_affiliation #this is the mapping ot be stored in authors_data
+			authors_data[author_name] = author_affiliation # this is the mapping ot be stored in authors_data
 		end
 
 		refs_url = url.dup
 		refs_url["/abs/"] = "/refs/"
-		# puts refs_url
 		citations = getReferences(refs_url)
-
-		#puts "refurl " + refs_url
-		#puts "citation  " + citations.to_s
 
 		data[id] = [url,
 			updated,
@@ -204,9 +203,13 @@ def parseArxivQuery(url)
 			citations,
 			id]
 	end
-	#puts namespaces
+
 	return data
 end
+
+
+
+# Gets the arxiv ids of the citations of an article by url
 
 def getReferences(url)
 	citations = []
@@ -217,16 +220,16 @@ def getReferences(url)
 
 	refs = doc.xpath('//dt/span[contains(@class,"list-identifier")]/a[contains(@title,"Abstract")]')
 	refs.each do |ref|
-		# ap ref
 		a = ref.content.match(/:(...*)/)[1]
 		citations.push(a)
 	end
 
 	return citations
-
-
 end
 
+
+
+# Scrapes arxiv for the article information from a specific arxiv id
 
 def parseArxivId(arg_id)
 	url = 'http://export.arxiv.org/api/query?id_list=' + arg_id
@@ -235,7 +238,6 @@ def parseArxivId(arg_id)
 	query = open(url,'Content-Type' => 'text/xml')
 	doc = Nokogiri::XML(query)
 	namespaces = doc.collect_namespaces()
-	# puts namespaces
 
 	entry = doc.at_xpath('//xmlns:entry')
 
@@ -254,9 +256,7 @@ def parseArxivId(arg_id)
 
 	if url 
 		url = url.content
-		# puts url
 		id = url.match(/abs\/(...*)/)[1]
-		# puts id
 	end
 
 	if updated
@@ -290,22 +290,19 @@ def parseArxivId(arg_id)
 	authors_data = Hash.new
 	authors.each do |author|
 		author_name = author.at_xpath('.//xmlns:name')
-		author_affiliation = author.at_xpath('.//arxiv:affiliation',namespaces) #returns a node
+		author_affiliation = author.at_xpath('.//arxiv:affiliation',namespaces) # returns a node
 		if author_name
 			author_name = author_name.content
 		end
 		if author_affiliation
 			author_affiliation = author_affiliation.content
 		end
-		authors_data[author_name] = author_affiliation #this is the mapping ot be stored in authors_data
+		authors_data[author_name] = author_affiliation # this is the mapping to be stored in authors_data
 	end
 
 	refs_url = url.dup
 	refs_url["/abs/"] = "/refs/"
 	citations = getReferences(refs_url)
-
-	#puts "refurl " + refs_url
-	#puts "citation  " + citations.to_s
 
 	final = [url,
 		updated,
@@ -320,6 +317,5 @@ def parseArxivId(arg_id)
 		citations,
 		id]
 
-	#puts namespaces
 	return final
 end
