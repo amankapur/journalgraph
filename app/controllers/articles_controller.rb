@@ -49,11 +49,14 @@ class ArticlesController < ApplicationController
     end
   end
 
+  ### This function is called when 'magic' button is clicked
+
   def search
-    query = params['query']
-    searchtype = params['searchtype']
-    ap "searchtype!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    ap searchtype
+    query = params['query']       # query sent by user
+    searchtype = params['searchtype']   # what type of search is this
+    
+    # based on search type, call the appropriate search function
+
     case searchtype
       when 'boolean' then @articles = search_bool(query)
       when 'tf' then @articles = search_TF(query)
@@ -73,6 +76,8 @@ class ArticlesController < ApplicationController
     render "articles"
     
   end
+
+  # simple boolean search for whether query terms exist in the summary of articles
 
   def search_bool(query)
     ap "!!!!!!!!!!!!!!!!!!! SEARCH BOOL CALLED WITH query " + query.to_s
@@ -96,11 +101,15 @@ class ArticlesController < ApplicationController
     
   end
 
+  # search based on Term frequency
+
   def search_TF(query)
     terms = query.split(' ')
     puts terms
-    articles_bool = search_bool(query)
+    articles_bool = search_bool(query)    # first get a simple boolean search of articles
 
+
+    # create the corpus of articles 
     corpus = []
     articles_bool.each do |article|
       summary = article.summary
@@ -110,6 +119,7 @@ class ArticlesController < ApplicationController
 
     analyzed = nil
 
+    # make a hash of TF for each of the articles 
     score_map = {}
     articles_bool.each do |article|
       summary = article.summary
@@ -117,6 +127,8 @@ class ArticlesController < ApplicationController
       article_tf = TfIdf.new([split_summary])
       score_map[article] = score(article_tf.tf[0],terms,analyzed)
     end
+
+    # rank this hash by TF and return the articles
 
     @articles = articles_bool.sort_by { |article|
       -score_map[article]
@@ -126,11 +138,16 @@ class ArticlesController < ApplicationController
     
   end
 
+
+  # TFIDF based search 
+
   def search_TFIDF(query)
     terms = query.split(' ')
     puts terms
     articles_bool = search_bool(query)
 
+
+    # make a corpus
     corpus = []
     articles_bool.each do |article|
       summary = article.summary
@@ -138,8 +155,12 @@ class ArticlesController < ApplicationController
       corpus << split_summary
     end
 
+    # get IDF values using TFIdf library
     analysis = TfIdf.new(corpus)
     analyzed = analysis.idf
+
+
+    # get TfIdf scores for each of the articles into a hash
 
     score_map = {}
     articles_bool.each do |article|
@@ -148,6 +169,8 @@ class ArticlesController < ApplicationController
       article_tf = TfIdf.new([split_summary])
       score_map[article] = score(article_tf.tf[0],terms,analyzed)
     end
+
+    # rank by the score and return articles
 
     @articles = articles_bool.sort_by { |article|
       -(score_map[article])
@@ -157,31 +180,43 @@ class ArticlesController < ApplicationController
     
   end
 
+
+  # Page rank search
+
   def search_pagerank(query)
     terms = query.split(' ')
     puts terms
-    articles_bool = search_bool(query)
+    articles_bool = search_bool(query)  # get boolean matches first
+
+    # rank these based on page rank vector
 
     @articles = articles_bool.sort_by { |article|
-      pagerank = article.pagerank
+      pagerank = article.pagerank   # page rank is a model attribute since its is a independent of the query
       puts pagerank
       -(pagerank)
     }
     return @articles
   end
 
+
+  # Page rank and TfIdf search
+
   def search_TFIDF_pagerank(query)
     terms = query.split(' ')
     puts terms
-    articles_bool = search_bool(query)
+    articles_bool = search_bool(query)  # get boolean articles first
 
     corpus = []
+
+    # make the corpus 
 
     articles_bool.each do |article|
       summary = article.summary
       split_summary = summary.split(' ')
       corpus << split_summary
     end
+
+    # get TFIDF article hash
 
     analysis = TfIdf.new(corpus)
     analyzed = analysis.idf
@@ -194,6 +229,7 @@ class ArticlesController < ApplicationController
       score_map[article] = score(article_tf.tf[0],terms,analyzed)
     end
 
+    # get pankrank values and sort on the sum of TfIdf and pagerank
     @articles = articles_bool.sort_by { |article|
       pagerank = article.pagerank
       puts pagerank
@@ -203,6 +239,9 @@ class ArticlesController < ApplicationController
     return @articles
     
   end
+
+
+  # called when show_authors_papers is called on the client
 
   def get_works
     tag = params['query']
@@ -219,6 +258,8 @@ class ArticlesController < ApplicationController
     render "articles"
 
   end
+
+  # helper function with gets articles based on author id
 
   def get_articles(author_id)
 
@@ -241,6 +282,8 @@ class ArticlesController < ApplicationController
   end
 
 
+  # gets all authors of a certain article
+
   def show_authors
     tag = params['query']
 
@@ -259,17 +302,19 @@ class ArticlesController < ApplicationController
   end    
 
 
+  # called when get related authors is called
 
   def get_related_authors
     tag = params['query']
 
-    @articles = get_articles(tag)
+    @articles = get_articles(tag)   # gets all articles of this author
     # puts 'ARTICLES'
     # ap @articles
 
     @related_articles = []
     @authors = []
 
+    # for each of the author's articles, get 1st degree articles and their respective authors
     @articles.each do |article|
       puts "ARTIClE ID "
       puts article.arxiv_id
@@ -296,6 +341,7 @@ class ArticlesController < ApplicationController
     render "authors"
   end    
 
+  # called  when get related papers is called on client
 
   def get_related
     tag = params['query']
@@ -312,8 +358,10 @@ class ArticlesController < ApplicationController
     render "articles"
   end
 
+  # helper function takes in id of the article passed in by client, and n which is number of articles to be returned
+
   def getRelatedPapers(curr_id, n)
-    @article = Article.where('arxiv_id = ?', curr_id).first
+    @article = Article.where('arxiv_id = ?', curr_id).first   # get the article passed in from DB
     
     puts @article
     if @article == [] || @article.nil?
@@ -322,9 +370,9 @@ class ArticlesController < ApplicationController
     end
     @valid_friends = []
 
-    @friends = @article.friendships
+    @friends = @article.friendships # this returns all 1 degree close articles
 
-
+    # if they are in the same category, store in valid friends
     @friends.each do |friendship|
       friend = Article.find(friendship.friend_id)
       if friend.category == @article.category
@@ -332,6 +380,7 @@ class ArticlesController < ApplicationController
       end
     end
 
+    # get all inwards edges for this artcle
     Friendship.find(:all, conditions: {friend_id: @article.id}).each do |cited_by|
       @valid_friends << Article.find(cited_by.article_id)
       puts 'ADDED CITED BY'
@@ -346,6 +395,9 @@ class ArticlesController < ApplicationController
     end
 
     temp = Hash.new()
+
+    # Make a hash for each of these filtered articles
+    # the key for this hash the score, and value is the article
 
     @valid_friends.each do |friend|
       keywords = @article.keywords.split(',')
@@ -366,6 +418,8 @@ class ArticlesController < ApplicationController
     # ap temp
 
     sorted = temp.dup
+
+    # sort based on the score and return the articles.
 
     sorted.sort.each do |score|
 
@@ -393,6 +447,8 @@ class ArticlesController < ApplicationController
 
   end
 
+  # gets the Levenshtein distance between the 2 keyword arrays. 
+
   def get_score(arr1, arr2)
     score = 0
 
@@ -409,18 +465,6 @@ class ArticlesController < ApplicationController
     end
 
     return score
-  end
-
-
-  def lev_distance(a, b)
-    puts 'finding lev'
-    case
-      when a.empty? then b.length
-      when b.empty? then a.length
-      else [(a[0] == b[0] ? 0 : 1) + lev_distance(a[1..-1], b[1..-1]),
-            1 + lev_distance(a[1..-1], b),
-            1 + lev_distance(a, b[1..-1])].min
-    end
   end
 
 end

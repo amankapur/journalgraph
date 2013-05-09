@@ -6,8 +6,8 @@ require 'RubyDataStructures'
 
 task :extendgraph => :environment do
 
-	start = 1
-	ending = 4
+	start = 325
+	ending = 335
 
 	arr = []
 	(start..ending).each do |i|
