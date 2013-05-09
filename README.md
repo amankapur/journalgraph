@@ -29,6 +29,34 @@ Users can "explore" a topic by traversing our graph.
 * They can view all articles given by a given author.
 * They can look at authors related to a given author.
 
+Setting Up
+=====
+Make sure you have the following dependencies:
+* Ruby version 1.9.3
+* Rails version 3.2.x
+
+You can check your operating version of Ruby and Rails with the commands
+```
+ruby -v
+rails -v
+```
+
+If you have the Ruby Version Manager (RVM), you can switch to the right version with
+```
+rvm use 1.9.3
+```
+
+Next, run these commands in order
+```
+git clone git@github.com:fireblade99/journalgraph.git
+cd journalgraph/db
+wget https://dl.dropboxusercontent.com/u/45072018/development.sqlite3
+cd ..
+bundle install
+rake db migrate
+rails s
+```
+
 Database representation
 =====
 Nodes are articles and authors.
@@ -41,6 +69,9 @@ They also hold information to aid the search engine:
 
 PageRank
 =====
+
+PageRank is a measure of article importance.
+Highly ranked articles tend to either have many incoming citations from other articles, or are cited by highly cited articles.
 
 To compute PageRank, we first generate the transition probability matrix for our graph.
 Here is an example transition probability matrix, where each directed edge coming out of a node is weighted by 1/n,
@@ -67,3 +98,17 @@ However, article c cites articles a, b, and c, so each edge has weight 1/3.
 
 TFIDF
 =====
+
+TFIDF is a query dependent method of ranking articles by relevance.
+
+```
+TFIDF = TF * IDF
+```
+
+, where TF is proportional to the number of times a term occurs in an article
+, and IDF is a measure of how special a term is to a given article relative to the other articles in the query.
+
+Ranking
+=====
+PageRank and TFIDF both return values from 0 to 1 for each article.
+By adding these values, we obtain a ranking function that considers both relevance and importance.
