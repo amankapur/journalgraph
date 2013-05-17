@@ -7,6 +7,7 @@ gem 'rails', '3.2.12'
 
 gem 'pg', :group => :production
 gem 'sqlite3', :group => :development
+gem 'taps'
 
 gem 'nokogiri'
 gem 'awesome_print'
