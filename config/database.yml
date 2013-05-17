@@ -16,9 +16,10 @@ development:
   adapter: postgresql
   encoding: unicode
   database: jgraph_development
+  host: localhost
   pool: 5
   username: jgraph
-  password:
+  password: outoftown1
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -37,7 +38,7 @@ test:
   database: jgraph_test
   pool: 5
   username: jgraph
-  password:
+  password: outoftown1
 
 # ******************* Original config ***********
 #production:
@@ -51,6 +52,7 @@ production:
   adapter: postgresql
   encoding: unicode
   database: jgraph_development
+  host: localhost
   pool: 5
   username: jgraph
-  password:
+  password: outoftown1
