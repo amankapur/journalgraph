@@ -2,6 +2,8 @@ Graph search for academic articles.
 
 Authors: Aman Kapur and Jimmy Wu
 
+demo: http://journalgraph.herokuapp.com/
+
 Built at Olin College of Engineering as a part of an AI class.
 
 ![Graph visualization](https://dl.dropboxusercontent.com/u/45072018/graphvis.png)
